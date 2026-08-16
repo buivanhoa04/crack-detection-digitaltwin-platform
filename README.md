@@ -1,149 +1,149 @@
 <div align="center">
 
-# 🛸 AI Drone Inspection & 3D Digital Twin Platform
-### Next-Gen Civil Infrastructure Quality & Defect Assessment System
-**SOTA Computer Vision (YOLO + CBAM + SAHI) • 3D Digital Twin Reconstruction • Next.js 14 • FastAPI**
+# 🛸 NỀN TẢNG AI DRONE GIÁM ĐỊNH & DIGITAL TWIN 3D CÔNG TRÌNH GIAO THÔNG
+### Hệ Thống Tự Động Hóa Giám Định Khuyết Tật & Quản Lý Chất Lượng Hạ Tầng Cầu Đường Bộ
+**Thị Giác Máy Tính SOTA (YOLO + CBAM + SAHI) • Tái Tạo Không Gian Số 3D (Digital Twin) • Next.js 14 • FastAPI**
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://python.org)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.x%20CUDA-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
-[![TensorRT](https://img.shields.io/badge/NVIDIA-TensorRT%20FP16-76B900?logo=nvidia&logoColor=white)](https://developer.nvidia.com/tensorrt)
-[![FastAPI](https://img.shields.io/badge/FastAPI-High%20Performance-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Next.js 14](https://img.shields.io/badge/Next.js-14%20App%20Router-black?logo=next.js&logoColor=white)](https://nextjs.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Docker](https://img.shields.io/badge/Docker-Compose%20Ready-2496ED?logo=docker&logoColor=white)](https://docker.com)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Ngôn_ngữ-Python_3.10+-blue?logo=python&logoColor=white)](https://python.org)
+[![PyTorch](https://img.shields.io/badge/Mô_hình-PyTorch_CUDA-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
+[![TensorRT](https://img.shields.io/badge/Tăng_tốc_GPU-NVIDIA_TensorRT_FP16-76B900?logo=nvidia&logoColor=white)](https://developer.nvidia.com/tensorrt)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Next.js 14](https://img.shields.io/badge/Frontend-Next.js_14_App_Router-black?logo=next.js&logoColor=white)](https://nextjs.org)
+[![Tailwind CSS](https://img.shields.io/badge/Giao_diện-Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Docker](https://img.shields.io/badge/Đóng_gói-Docker_Compose-2496ED?logo=docker&logoColor=white)](https://docker.com)
+[![TCVN](https://img.shields.io/badge/Tiêu_chuẩn-TCVN_8866_/_8859-orange)](#)
 
 ---
 
 </div>
 
-## 📌 Executive Summary (Tổng Quan Dự Án)
+## 📌 1. TỔNG QUAN DỰ ÁN
 
-**AI Drone Inspection & 3D Digital Twin Platform** là hệ thống công nghệ cao ứng dụng **Trí tuệ nhân tạo (AI Vision)** kết hợp **Tái tạo không gian số 3D (Digital Twin)** nhằm tự động hóa quy trình khảo sát, phát hiện khuyết tật và thẩm định chất lượng các công trình giao thông trọng điểm (Cầu bê tông cốt thép & Mặt đường bộ).
+Hệ thống **AI Drone Giám Định & Digital Twin 3D** là giải pháp công nghệ toàn diện kết hợp giữa **Trí tuệ nhân tạo thị giác máy tính (AI Computer Vision)** và **Công nghệ bản sao số 3D (3D Digital Twin)** nhằm tự động hóa quy trình khảo sát hiện trạng, phát hiện hư hỏng và lập báo cáo thẩm định chất lượng các công trình giao thông (Mặt đường ô tô & Cầu bê tông cốt thép).
 
-Hệ thống giải quyết triệt để các hạn chế của phương pháp giám định thủ công:
-- 🚀 **Nhanh gấp 20 lần**: Khảo sát diện rộng qua Drone kết hợp xử lý AI song song.
-- 🎯 **Chính xác tới từng milimet**: Phát hiện vết nứt siêu nhỏ (Micro-cracks) trên ảnh 4K/8K không bị bỏ sót nhờ kỹ thuật SAHI.
-- 🌐 **Trực quan hóa 3D thực địa**: Gắn nhãn và đo đạc kích thước khuyết tật trực tiếp trong không gian 3D tương tác.
-- 📋 **Báo cáo chuẩn TCVN**: Tự động đánh giá theo tiêu chuẩn giao thông Việt Nam (*TCVN 8866 / TCVN 8859 / DACL10k*) tích hợp VLM (*Vision Language Model*).
+### 🎯 Giá trị thực tiễn & Hiệu quả vượt trội:
+- ⚡ **Tốc độ khảo sát gấp 20 lần**: Thay thế phương pháp đo đạc thủ công bằng thiết bị bay không người lái (Drone) kết hợp xử lý song song trên GPU.
+- 🔬 **Độ chính xác tới từng milimet**: Công nghệ cắt trượt thông minh (SAHI) giúp phát hiện chính xác các vết nứt siêu nhỏ (*Micro-cracks*) trên ảnh độ phân giải siêu cao (4K/8K) mà không bị mất nét.
+- 🌐 **Mô hình hóa 3D thực địa**: Gắn nhãn, đo đạc kích thước và hiển thị vị trí khuyết tật trực tiếp trong không gian 3D tương tác trên nền Web.
+- 📜 **Báo cáo chuẩn hóa Tiêu chuẩn Việt Nam (TCVN)**: Tự động phân cấp mức độ nghiêm trọng và xuất báo cáo thẩm định theo **TCVN 8866**, **TCVN 8859** và bộ dữ liệu **DACL10k** tích hợp mô hình ngôn ngữ thị giác VLM (*Vision Language Model*).
 
 ---
 
-## 🏗️ System Architecture (Kiến Trúc Hệ Thống)
+## 🏗️ 2. KIẾN TRÚC HỆ THỐNG TOÀN DIỆN
 
 ```mermaid
 graph TD
-    subgraph Data Acquisition
-        A[🚁 Drone 4K/8K Video/Photo Stream] --> B[FastAPI Gateway / Nginx]
+    subgraph Thu Thập Dữ Liệu Thực Địa
+        A[🚁 Drone Truyền Luồng Video / Ảnh 4K/8K] --> B[Cổng Nginx / FastAPI Gateway]
     end
 
-    subgraph AI Vision Engine
-        B --> C[Celery Distributed Queue + Redis]
-        C --> D[YOLO + CBAM Attention Backbone]
-        D --> E[SAHI Slicing Inference Engine]
-        D --> F[BoT-SORT / ByteTrack Tracking]
-        E & F --> G[NVIDIA TensorRT Acceleration]
+    subgraph Khối Xử Lý AI Thị Giác Máy Tính
+        B --> C[Hàng Đợi Phân Tán Celery + Redis]
+        C --> D[Mô Hình YOLO + Cơ Chế Chú Ý CBAM]
+        D --> E[Công Nghệ Cắt Trượt Thông Minh SAHI]
+        D --> F[Thuật Toán Theo Dõi Quỹ Đạo BoT-SORT / ByteTrack]
+        E & F --> G[Tăng Tốc Phần Cứng NVIDIA TensorRT FP16]
     end
 
-    subgraph 3D Digital Twin Engine
-        B --> H[COLMAP / Meshroom Pipeline]
-        H --> I[Dense PointCloud & Mesh Reconstruction]
-        I --> J[3D Defect Spatial Projection]
+    subgraph Khối Tái Tạo Bản Sao Số 3D
+        B --> H[Pipeline Tái Tạo COLMAP & Meshroom]
+        H --> I[Xây Dựng Đám Mây Điểm & Lưới 3D Texture Mesh]
+        I --> J[Chiếu Tọa Độ Khuyết Tật Lên Bề Mặt 3D]
     end
 
-    subgraph Core Backend & Storage
-        G & J --> K[FastAPI Master Management Backend]
-        K --> L[(MongoDB: Inspections & Defects)]
-        K --> M[(MinIO / File Storage: Media & 3D Assets)]
+    subgraph Máy Chủ Điều Hành & Cơ Sở Dữ Liệu
+        G & J --> K[Master Backend FastAPI Quản Lý Hệ Thống]
+        K --> L[(Cơ Sở Dữ Liệu MongoDB: Hồ Sơ Khảo Sát & Khuyết Tật)]
+        K --> M[(Lưu Trữ Tệp Tin MinIO: Video, Ảnh & Dữ Liệu 3D)]
     end
 
-    subgraph Intelligent Analytics
-        K --> N[Direct VLM / RAG Civil Engineering Expert]
-        N --> O[Automated TCVN 8866/8859 Compliance Report]
+    subgraph Phân Tích & Báo Cáo Chuyên Sâu
+        K --> N[Mô Hình Ngôn Ngữ Thị Giác VLM Thẩm Định]
+        N --> O[Báo Cáo Tự Động Hóa Chuẩn TCVN 8866/8859]
     end
 
-    subgraph Web Presentation Layer
-        K --> P[Next.js 14 Web Application]
-        P --> Q[3D Model Viewer - Three.js]
-        P --> R[GIS Interactive Defect Map]
-        P --> S[Realtime Drone Telemetry HUD]
+    subgraph Giao Diện Người Dùng Web
+        K --> P[Ứng Dụng Web Hiện Đại Next.js 14]
+        P --> Q[Trình Xem & Tương Tác 3D Three.js]
+        P --> R[Bản Đồ GIS Trực Quan Hóa Sự Cố]
+        P --> S[Màn Hình Giám Sát Drone Telemetry HUD Thời Gian Thực]
     end
 ```
 
 ---
 
-## ⚡ Core Technical Innovations (Điểm Nhấn Công Nghệ)
+## ⚡ 3. ĐIỂM NHẤN CÔNG NGHỆ & ĐỘT PHÁ KỸ THUẬT
 
-### 1. 🛣️ Road Damage Inspection (YOLO + CBAM + OBB)
-- **Oriented Bounding Box (OBB)**: Phát hiện vết nứt xiên, nứt lưới (*Alligator Crack*), ổ gà (*Pothole*) theo hướng quay tự do, tránh diện tích thừa của bounding box truyền thống.
-- **CBAM Attention Mechanism**: Tăng cường khả năng nhận diện vân nứt mờ trong điều kiện bóng râm, bề mặt đường loang lổ hoặc ánh sáng phức tạp.
+### 🛣️ 3.1. Nhận diện khuyết tật mặt đường bộ (YOLO + CBAM + OBB)
+- **Oriented Bounding Box (OBB - Hộp bao có góc xoay)**: Nhận diện chính xác hướng đi của vết nứt xiên, nứt lưới (*Alligator Crack*), ổ gà (*Pothole*), khe lún và vết nứt dọc/ngang mà không bị dư thừa diện tích nền như hộp bao thẳng truyền thống.
+- **Cơ chế chú ý CBAM (Convolutional Block Attention Module)**: Tập trung nhận diện các vân nứt mờ nhạt ngay cả trong điều kiện mặt đường bị bóng cây, loang lổ ẩm ướt hoặc ánh sáng gắt.
 
-### 2. 🌉 Bridge Structural Defect Segmentation (DACL10k + SAHI)
-- Phân đoạn đa lớp 7+ nhóm khuyết tật cầu bê tông: *Crack, Efflorescence, Exposed Rebar, Spalling, Corrosion, Rust, Seepage*.
-- **SAHI (Slicing Aided Hyper Inference)**: Cắt trượt thông minh ảnh độ phân giải siêu cao (3840x2160 trở lên) thành các tile 640x640 và hợp nhất NMM (*Non-Maximum Merging*), không làm suy giảm độ nét của vết nứt.
+### 🌉 3.2. Phân đoạn đa khuyết tật kết cấu cầu (DACL10k + SAHI)
+- Phân loại và phân đoạn chính xác hơn 7 nhóm khuyết tật cầu bê tông: *Vết nứt kết cấu, Vôi hóa / rò rỉ chất kết dính, Lộ cốt thép, Bong tróc bê tông, Rỉ sét ăn mòn, Ẩm ướt thấm nước*.
+- **SAHI (Slicing Aided Hyper Inference)**: Tự động chia nhỏ ảnh 4K/8K thành các ô tile 640x640 có độ gối chồng (*overlap*), sau đó hợp nhất qua thuật toán NMM (*Non-Maximum Merging*), đảm bảo không bỏ sót bất kỳ vết nứt siêu nhỏ nào.
 
-### 3. 🎯 Temporal Tracking & Deduplication (BoT-SORT + GMC)
-- Sử dụng thuật toán theo dõi quỹ đạo **BoT-SORT** kết hợp **Global Motion Compensation (GMC)** nhằm loại bỏ hiện tượng đếm trùng khuyết tật khi drone di chuyển hoặc rung lắc.
-- **Temporal EMA Confidence Fusion**: Tích lũy độ tin cậy qua từng khung hình video.
+### 🎯 3.3. Theo dõi hành trình & Khử trùng lặp (BoT-SORT + GMC)
+- Sử dụng thuật toán theo dõi **BoT-SORT** kết hợp bù trừ chuyển động camera drone **GMC (Global Motion Compensation)** để duy trì ID duy nhất cho từng khuyết tật trên suốt hành trình bay.
+- **Khử trùng lặp đa khung hình**: Tránh tính toán trùng lặp diện tích và số lượng hư hỏng khi drone bay qua lại.
 
-### 4. ⚡ Ultra-fast Inference (NVIDIA TensorRT)
-- Tối ưu hóa mô hình qua **TensorRT Engine (FP16 / INT8)**, đạt tốc độ suy luận dưới **30ms/frame**, hỗ trợ xử lý luồng camera giám sát thời gian thực.
+### ⚡ 3.4. Tăng tốc suy luận GPU (NVIDIA TensorRT)
+- Chuyển đổi và tối ưu mô hình sang định dạng **TensorRT Engine (FP16 / INT8)**, đạt tốc độ xử lý dưới **30 mili-giây / khung hình**, đáp ứng hoàn hảo yêu cầu truyền hình ảnh trực tiếp.
 
-### 5. 🌐 3D Digital Twin Reconstruction
-- Kết hợp **COLMAP & Meshroom** xây dựng mô hình lưới không gian 3D dạng textured mesh (`.obj`, `.gltf`).
-- Giao diện **Three.js** cho phép xoay 360°, đo chiều dài vết nứt và kiểm tra lát cắt bề mặt trực tuyến.
+### 🌐 3.5. Bản sao số 3D Digital Twin tương tác
+- Tích hợp **COLMAP & Meshroom** xây dựng mô hình kết cấu 3D dạng textured mesh (`.obj`, `.gltf`).
+- Người dùng có thể xoay 360°, phóng to từng góc khuất của dầm cầu, đo đạc trực tiếp chiều dài/diện tích vết nứt và xem vết nứt trên mô hình 3D thực.
 
 ---
 
-## 💻 Tech Stack (Công Nghệ Sử Dụng)
+## 💻 4. DANH MỤC CÔNG NGHỆ SỬ DỤNG (TECH STACK)
 
-| Khối Chức Năng | Công Nghệ / Thư Viện |
+| Khối Chức Năng | Công Nghệ & Thư Viện Chính |
 | :--- | :--- |
-| **AI & Computer Vision** | PyTorch, Ultralytics YOLO, SAHI, OpenCV, Supervision, Albumentations |
-| **GPU Acceleration** | NVIDIA TensorRT, CUDA 12.x, ONNX Runtime GPU |
-| **Distributed Workers** | Celery, Redis |
-| **Master Backend** | FastAPI, Pydantic v2, Motor (Async MongoDB), SQLAlchemy |
-| **Frontend UI** | Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS, Lucide Icons |
-| **3D & GIS Mapping** | Three.js, React Three Fiber, Leaflet GIS Map |
-| **DevOps & Deploy** | Docker, Docker Compose, Nginx Reverse Proxy |
+| **AI & Thị Giác Máy Tính** | PyTorch, Ultralytics YOLO, SAHI, OpenCV, Supervision, Albumentations |
+| **Tối Ưu & Tăng Tốc GPU** | NVIDIA TensorRT, CUDA 12.x, ONNX Runtime GPU |
+| **Hàng Đợi & Xử Lý Chạy Ngầm** | Celery Distributed Worker, Redis Cache & Broker |
+| **Master Backend Quản Lý** | FastAPI, Pydantic v2, Motor (Async MongoDB), SQLAlchemy, JWT Auth |
+| **Frontend Giao Diện Web** | Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS, Lucide Icons |
+| **Đồ Họa 3D & Bản Đồ GIS** | Three.js, React Three Fiber, Leaflet GIS Mapping |
+| **Hạ Tầng & Triển Khai (DevOps)**| Docker, Docker Compose, Nginx Reverse Proxy |
 
 ---
 
-## 📁 Repository Structure (Cấu Trúc Thư Mục)
+## 📁 5. CẤU TRÚC THƯ MỤC DỰ ÁN (MONOREPO)
 
 ```
 crack-digitaltwin-platform/
-├── api/                            # Khối AI & Phân Tích Dữ Liệu
-│   ├── crack_api/                  # Core FastAPI AI Service (YOLO, SAHI, Tracking, Celery)
-│   │   ├── celery_tasks.py         # Distributed worker tasks for single/batch images & videos
-│   │   ├── inference_engine.py     # Unified SOTA SAHI + TensorRT inference engine
-│   │   ├── cbam_module.py          # Convolutional Block Attention Module
-│   │   ├── main.py                 # AI API REST Endpoints
-│   │   └── Dockerfile              # Containerized GPU AI image
-│   ├── meshroom_3d/                # Dịch vụ 3D Reconstruction (Meshroom / COLMAP)
-│   ├── chatbot_middleware/         # Middleware kết nối RAG / AI Chatbot
-│   ├── pipelines/                  # Huấn luyện mô hình chuyên sâu (Bridge & Road)
-│   └── convert/                    # Tiện ích chuyển đổi định dạng dữ liệu
+├── api/                            # Khối Dịch Vụ AI & Phân Tích Dữ Liệu
+│   ├── crack_api/                  # Core AI Engine (YOLO, SAHI, Tracking, Celery Worker)
+│   │   ├── celery_tasks.py         # Tiến trình Celery xử lý ảnh đơn, lô ảnh và video offline
+│   │   ├── inference_engine.py     # Bộ suy luận SOTA tích hợp SAHI + TensorRT
+│   │   ├── cbam_module.py          # Module chú ý không gian và kênh CBAM
+│   │   ├── main.py                 # REST API FastAPI lắng nghe yêu cầu giám định
+│   │   └── Dockerfile              # Cấu hình container Docker AI chuyên dụng GPU
+│   ├── meshroom_3d/                # Dịch vụ tái tạo mô hình 3D (Meshroom / COLMAP)
+│   ├── chatbot_middleware/         # Middleware kết nối Chatbot tư vấn tiêu chuẩn TCVN
+│   ├── pipelines/                  # Pipeline huấn luyện mô hình (Cầu DACL10k & Đường OBB)
+│   └── convert/                    # Tiện ích chuyển đổi dữ liệu và nhãn dán
 │
 ├── web/                            # Khối Giao Diện & Điều Hành Web
-│   ├── frontend/                   # Next.js 14 Web UI
-│   │   ├── src/app/crack-detection # Giao diện giám định ảnh/video & Realtime HUD
-│   │   ├── src/app/digital-twin    # Trình xem 3D tương tác Three.js & quản lý mô hình
-│   │   ├── src/app/incidents-map   # Bản đồ GIS định vị sự cố hạ tầng
-│   │   └── src/components/         # Reusable UI Components
-│   ├── backend/                    # FastAPI Master Backend (Quản lý đợt khảo sát, thẩm định)
-│   └── nginx/                      # Nginx reverse proxy configuration
+│   ├── frontend/                   # Ứng dụng Next.js 14
+│   │   ├── src/app/crack-detection # Giao diện giám định ảnh/video & HUD Drone
+│   │   ├── src/app/digital-twin    # Trình tương tác mô hình 3D Three.js
+│   │   ├── src/app/incidents-map   # Bản đồ GIS theo dõi điểm hư hỏng trên tuyến
+│   │   └── src/components/         # Thư viện component giao diện dùng chung
+│   ├── backend/                    # FastAPI Master Backend (Quản lý đợt khảo sát, thẩm định, phân quyền)
+│   └── nginx/                      # Cấu hình máy chủ điều hướng Nginx
 │
-├── docker-compose.yml              # File điều phối Docker Compose toàn hệ thống
-├── .env.example                    # File mẫu cấu hình biến môi trường
-└── .gitignore                      # Quy tắc loại trừ file dữ liệu lớn & bảo mật
+├── docker-compose.yml              # File điều phối toàn bộ hệ thống bằng Docker Compose
+├── .env.example                    # Mẫu cấu hình biến môi trường an toàn
+└── .gitignore                      # Quy tắc loại trừ tệp tin rác và bảo mật
 ```
 
 ---
 
-## 🚀 Quick Start (Hướng Dẫn Chạy Nhanh)
+## 🚀 6. HƯỚNG DẪN CÀI ĐẶT & CHẠY HỆ THỐNG
 
-### 1. Clone Repository
+### 1. Tải Mã Nguồn Về Máy
 ```bash
 git clone https://github.com/buivanhoa04/crack-detection-digitaltwin-platform.git
 cd crack-detection-digitaltwin-platform
@@ -151,23 +151,26 @@ cd crack-detection-digitaltwin-platform
 
 ### 2. Thiết Lập Biến Môi Trường
 ```bash
+# Tạo file cấu hình môi trường từ mẫu
 cp .env.example .env
-# Tùy chỉnh các thông số cổng, API Key và cấu hình GPU trong file .env
+
+# Chỉnh sửa file .env để cấu hình cổng mạng và API Key (nếu có)
 ```
 
-### 3. Khởi Chạy Bằng Docker Compose
+### 3. Khởi Chạy Toàn Bộ Hệ Thống Với Docker Compose
 ```bash
+# Khởi động toàn bộ Web, Backend, AI Engine, MongoDB và Redis
 docker compose up -d --build
 ```
 
-### 4. Truy Cập Hệ Thống
-- 🌐 **Web Dashboard**: `http://localhost:3000`
-- 📡 **Master Backend API Docs**: `http://localhost:8000/docs`
-- 🤖 **AI Engine API Docs**: `http://localhost:8000/api/v1/docs`
+### 4. Truy Cập Sử Dụng
+- 🌐 **Giao diện Web Người Dùng**: `http://localhost:3000`
+- 📡 **Tài liệu API Backend Quản Lý**: `http://localhost:8000/docs`
+- 🤖 **Tài liệu API Dịch Vụ AI**: `http://localhost:8000/api/v1/docs`
 
 ---
 
-## 👨‍💻 Author & Contact
-- **Developer**: Bùi Văn Hòa ([@buivanhoa04](https://github.com/buivanhoa04))
-- **Email**: `buivanhoa04@gmail.com`
-- **Field**: Computer Vision Engineer • AI & Digital Twin Specialist
+## 👨‍💻 7. THÔNG TIN TÁC GIẢ & LIÊN HỆ
+- **Kỹ sư phát triển**: **Bùi Văn Hòa** ([@buivanhoa04](https://github.com/buivanhoa04))
+- **Email liên hệ**: `buivanhoa04@gmail.com`
+- **Lĩnh vực chuyên môn**: Kỹ sư Thị giác Máy tính (Computer Vision) • Chuyên gia AI & Digital Twin Hạ tầng Giao thông
