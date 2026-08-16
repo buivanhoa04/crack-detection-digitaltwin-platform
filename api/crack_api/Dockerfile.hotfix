@@ -1,0 +1,19 @@
+FROM buihoa04/crack_api_ai_v3:latest
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir --default-timeout=1000 \
+    --extra-index-url https://pypi.nvidia.com \
+    -r requirements.txt
+
+COPY *.py .
+COPY *.json .
+
+ENV HF_ENDPOINT=https://hf-mirror.com
+
+RUN mkdir -p /app/weights /data/file/sources
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

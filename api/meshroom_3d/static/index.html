@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giám sát Biến Dạng 4D – M3C2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <style>
+        /* ── Design Tokens ── */
+        :root {
+            --bg:           #f1f5f9;
+            --surface:      #ffffff;
+            --surface-2:    #f8fafc;
+            --border:       #e2e8f0;
+            --border-light: #f1f5f9;
+            --text-1:       #0f172a;
+            --text-2:       #475569;
+            --text-3:       #94a3b8;
+            --accent:       #2563eb;
+            --accent-light: #eff6ff;
+            --accent-border:#bfdbfe;
+            --green:        #16a34a;
+            --green-light:  #f0fdf4;
+            --green-border: #bbf7d0;
+            --red:          #dc2626;
+            --red-light:    #fef2f2;
+            --red-border:   #fecaca;
+            --amber:        #d97706;
+            --amber-light:  #fffbeb;
+            --radius-sm:    6px;
+            --radius:       10px;
+            --radius-lg:    14px;
+            --shadow-sm:    0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+            --shadow:       0 4px 12px rgba(0,0,0,.06);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-1);
+            background: var(--bg);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 310px;
+            min-width: 310px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-1);
+            letter-spacing: -.01em;
+        }
+
+        .sidebar-subtitle {
+            font-size: 11px;
+            color: var(--text-3);
+            margin-top: 2px;
+        }
+
+        /* ── Sidebar sections ── */
+        .section {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: 10px;
+        }
+
+        /* Select */
+        .field { margin-bottom: 12px; }
+        .field:last-child { margin-bottom: 0; }
+        .field-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-2);
+            margin-bottom: 5px;
+        }
+        .field-hint {
+            font-size: 10px;
+            color: var(--text-3);
+            margin-top: 3px;
+        }
+
+        select {
+            width: 100%;
+            appearance: none;
+            background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2394a3b8' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 10px center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 7px 28px 7px 10px;
+            font-size: 12px;
+            font-family: inherit;
+            color: var(--text-1);
+            cursor: pointer;
+            outline: none;
+            transition: border-color .15s;
+        }
+        select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+        select option { font-size: 12px; }
+
+        /* Warning: same scan */
+        .same-scan-warn {
+            display: none;
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 500;
+            padding: 6px 10px;
+            background: var(--red-light);
+            border: 1px solid var(--red-border);
+            border-radius: var(--radius-sm);
+            margin-top: 8px;
+        }
+        .same-scan-warn.visible { display: block; }
+
+        /* AI Toggle card */
+        .ai-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            transition: border-color .15s, background .15s;
+        }
+        .ai-card.active {
+            background: var(--accent-light);
+            border-color: var(--accent-border);
+        }
+        .ai-card-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ai-toggle {
+            width: 34px;
+            height: 20px;
+            position: relative;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .ai-toggle input { display: none; }
+        .ai-track {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background: var(--border);
+            transition: background .2s;
+            position: relative;
+        }
+        .ai-toggle input:checked + .ai-track { background: var(--accent); }
+        .ai-thumb {
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: var(--shadow-sm);
+            transition: transform .2s;
+        }
+        .ai-toggle input:checked ~ .ai-thumb { transform: translateX(14px); }
+        /* fix stacking */
+        .ai-toggle { display: block; }
+        .ai-toggle .ai-thumb { pointer-events: none; }
+
+        .ai-card-title { font-size: 12px; font-weight: 600; color: var(--text-1); }
+        .ai-card-desc  { font-size: 11px; color: var(--text-2); margin-top: 3px; line-height: 1.4; }
+        .ai-status-ok  { color: var(--green); }
+        .ai-status-warn { color: var(--amber); }
+
+        /* Advanced collapse */
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-2);
+            padding: 4px 0;
+        }
+        .advanced-toggle svg { transition: transform .2s; }
+        .advanced-toggle.open svg { transform: rotate(90deg); }
+        .advanced-body {
+            display: none;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-light);
+            margin-top: 8px;
+        }
+        .advanced-body.open { display: block; }
+
+        /* Slider */
+        .slider-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .slider-name { font-size: 11px; color: var(--text-2); font-weight: 500; }
+        .slider-val  { font-size: 11px; color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border);
+            outline: none;
+            margin-bottom: 10px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--accent-border);
+            transition: transform .1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        .slider-disabled input[type="range"] { opacity: .35; pointer-events: none; }
+        .slider-disabled .slider-name { opacity: .5; }
+
+        /* Threshold select */
+        .threshold-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .threshold-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 7px;
+            border-radius: 20px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+        }
+
+        /* Run button */
+        .btn-run {
+            width: calc(100% - 40px);
+            margin: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .15s, opacity .15s, transform .1s;
+        }
+        .btn-run:hover:not(:disabled) { background: #1d4ed8; transform: translateY(-1px); }
+        .btn-run:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+        .btn-run svg { flex-shrink: 0; }
+
+        /* ── Main content ── */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 16px 20px 0;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            box-shadow: var(--shadow-sm);
+        }
+        .stat-card-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; }
+        .stat-card-value { font-size: 22px; font-weight: 700; color: var(--text-1); margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+        .stat-card-sub   { font-size: 10px; color: var(--text-3); }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 4px 0 2px;
+        }
+        .status-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .status-safe    { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+        .status-danger  { background: var(--red-light);   color: var(--red);   border: 1px solid var(--red-border); animation: pulse-red 1.5s infinite; }
+        .status-warning { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+        @keyframes pulse-red {
+            0%   { box-shadow: 0 0 0 0 rgba(220,38,38,.3); }
+            70%  { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
+            100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+        }
+
+        /* Workspace */
+        .workspace {
+            display: grid;
+            grid-template-columns: 60% 40%;
+            gap: 12px;
+            padding: 12px 20px 20px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .viewer-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .viewer-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .viewer-title { font-size: 12px; font-weight: 600; color: var(--text-1); }
+        .viewer-hint  { font-size: 11px; color: var(--text-3); }
+
+        .canvas-wrap {
+            flex: 1;
+            position: relative;
+            background: #f8fafc;
+            min-height: 0;
+        }
+        #three-canvas { width: 100%; height: 100%; outline: none; display: block; }
+
+        /* Colorbar */
+        .colorbar {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            background: rgba(255,255,255,.92);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 10px 8px;
+            backdrop-filter: blur(6px);
+        }
+        .colorbar-title { font-size: 9px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+        .colorbar-inner { display: flex; gap: 6px; align-items: center; }
+        .colorbar-bar   { width: 10px; height: 100px; background: linear-gradient(to top, #3b82f6, #22c55e, #ef4444); border-radius: 3px; }
+        .colorbar-labels { display: flex; flex-direction: column; justify-content: space-between; height: 100px; }
+        .colorbar-labels span { font-size: 10px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; }
+
+        /* Progress overlay */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,.88);
+            backdrop-filter: blur(4px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            z-index: 20;
+        }
+        .overlay.visible { display: flex; }
+        .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid var(--accent-light);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .overlay-text { font-size: 13px; font-weight: 500; color: var(--text-1); text-align: center; max-width: 260px; line-height: 1.5; }
+        .overlay-sub  { font-size: 11px; color: var(--text-3); }
+
+        /* Chart card */
+        .chart-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+        }
+        .chart-title { font-size: 12px; font-weight: 600; color: var(--text-1); margin-bottom: 12px; }
+        .chart-inner { flex: 1; position: relative; min-height: 0; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+        /* Embedded overrides */
+        body.embedded { background: #fff; }
+        body.embedded .sidebar { width: 280px; min-width: 280px; }
+        body.embedded .main { background: #f8fafc; }
+    </style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-title">Giám sát Biến Dạng 4D</div>
+        <div class="sidebar-subtitle">M3C2 · ICP Alignment</div>
+    </div>
+
+    <!-- Step 1: Choose campaign -->
+    <div class="section" id="campaign-section" style="display: none;">
+        <div class="section-label">Đợt khảo sát</div>
+        <div class="field">
+            <label class="field-label" for="survey-campaign-select">Chọn đợt khảo sát</label>
+            <select id="survey-campaign-select">
+                <option value="">-- Chọn đợt khảo sát --</option>
+            </select>
+            <div class="field-hint">Tất cả các lần quét 3D trong đợt này sẽ được dùng để so sánh</div>
+        </div>
+    </div>
+
+    <!-- Step 2: Choose T0 and T1 scans within that campaign -->
+    <div class="section" id="scan-pair-section" style="display: none;">
+        <div class="section-label">Chọn mốc so sánh</div>
+
+        <div class="field">
+            <label class="field-label" for="base-select">Mốc gốc (T₀)</label>
+            <select id="base-select">
+                <option value="">-- Chưa có bản quét --</option>
+            </select>
+            <div class="field-hint">Thời điểm đầu — cấu trúc trước biến dạng</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="compare-select">Mốc so sánh (T₁)</label>
+            <select id="compare-select">
+                <option value="">-- Chưa có bản quét --</option>
+            </select>
+            <div class="field-hint">Thời điểm sau — đo lượng biến dạng so với T₀</div>
+        </div>
+
+        <div class="same-scan-warn" id="same-scan-warn">
+            T₀ và T₁ không thể là cùng một lần quét.
+        </div>
+    </div>
+
+    <!-- Analysis config -->
+    <div class="section">
+        <div class="section-label">Cấu hình phân tích</div>
+
+        <!-- AI toggle -->
+        <div class="ai-card active" id="ai-card">
+            <div class="ai-card-row">
+                <label class="ai-toggle" id="ai-toggle-wrap">
+                    <input type="checkbox" id="ai-auto-toggle" checked>
+                    <div class="ai-track"></div>
+                    <div class="ai-thumb"></div>
+                </label>
+                <div>
+                    <div class="ai-card-title">Tự động tối ưu tham số</div>
+                </div>
+            </div>
+            <div class="ai-card-desc" id="ai-status-text">
+                <span class="ai-status-ok">Đang bật</span> — AI phân tích mật độ điểm để tự chọn D, d, H phù hợp.
+            </div>
+        </div>
+
+        <!-- Threshold -->
+        <div class="field">
+            <div class="threshold-label">
+                <label class="field-label" style="margin:0" for="threshold-preset">Ngưỡng cảnh báo</label>
+                <span class="threshold-badge" id="threshold-badge">50 mm</span>
+            </div>
+            <select id="threshold-preset">
+                <option value="20">Cầu, hầm, kết cấu thép — 20 mm</option>
+                <option value="50" selected>Đường bộ, mặt đường — 50 mm</option>
+                <option value="100">Taluy, mái dốc — 100 mm</option>
+                <option value="150">Công trình đất, đê — 150 mm</option>
+            </select>
+            <input type="hidden" id="threshold-range" value="50">
+            <div class="field-hint" id="threshold-hint">Khi biến dạng vượt ngưỡng này, hệ thống cảnh báo đỏ.</div>
+        </div>
+
+        <!-- Background road mesh display mode -->
+        <div class="field" style="margin-top: 12px;">
+            <label class="field-label" for="road-display-select">Hiển thị mô hình thực tế</label>
+            <select id="road-display-select">
+                <option value="opaque" selected>Đầy đủ (100%) - Khuyên dùng</option>
+                <option value="transparent">Bán trong suốt (75%)</option>
+                <option value="hidden">Ẩn</option>
+            </select>
+            <div class="field-hint">Chồng lớp ảnh thực tế lên bản đồ nhiệt để xác định vị trí.</div>
+        </div>
+
+        <!-- Toggle hiển thị vùng ổn định -->
+        <div class="ai-card" id="safe-points-card" style="margin-top: 12px; padding: 10px 12px; border-radius: var(--radius-sm); margin-bottom: 12px;">
+            <div class="ai-card-row">
+                <label class="ai-toggle" style="margin-bottom: 0;">
+                    <input type="checkbox" id="safe-points-toggle" checked>
+                    <div class="ai-track"></div>
+                    <div class="ai-thumb"></div>
+                </label>
+                <div>
+                    <div class="ai-card-title" style="font-size: 11px;">Hiển thị vùng ổn định (Xanh)</div>
+                </div>
+            </div>
+            <div class="field-hint" style="margin-top: 4px;">Ẩn bớt các điểm màu xanh không biến dạng để dễ quan sát mặt đường thực tế và điểm lún nứt.</div>
+        </div>
+
+        <!-- Hướng dẫn đọc bản đồ màu -->
+        <div class="ai-card" style="margin-top: 10px; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--surface-2); border-color: var(--border); margin-bottom: 12px;">
+            <div class="ai-card-title" style="font-size: 11px; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
+                <span style="font-size: 12px;">📊</span> Hướng dẫn đọc bản đồ nhiệt:
+            </div>
+            <div style="font-size: 11px; display: flex; flex-direction: column; gap: 5px; line-height: 1.4;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #dc2626; display: inline-block;"></span>
+                    <span><strong>Màu Đỏ:</strong> Mặt đường bị trồi lên / nhô cao.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #2563eb; display: inline-block;"></span>
+                    <span><strong>Màu Xanh dương (Tím):</strong> Mặt đường bị lún xuống.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #16a34a; display: inline-block;"></span>
+                    <span><strong>Màu Xanh lá:</strong> Vùng ổn định (an toàn).</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced params (collapsed) -->
+        <div class="advanced-toggle" id="advanced-toggle">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+            Tham số thuật toán nâng cao
+        </div>
+        <div class="advanced-body" id="advanced-body">
+            <div id="advanced-sliders">
+                <div class="slider-row">
+                    <span class="slider-name">Normal Scale (D)</span>
+                    <span class="slider-val" id="normal-val">1.0 m</span>
+                </div>
+                <input type="range" id="normal-range" min="0.2" max="3.0" step="0.1" value="1.0">
+
+                <div class="slider-row">
+                    <span class="slider-name">Projection Scale (d)</span>
+                    <span class="slider-val" id="proj-val">0.5 m</span>
+                </div>
+                <input type="range" id="proj-range" min="0.1" max="1.5" step="0.05" value="0.5">
+
+                <div class="slider-row">
+                    <span class="slider-name">Max Search Depth (H)</span>
+                    <span class="slider-val" id="depth-val">2.0 m</span>
+                </div>
+                <input type="range" id="depth-range" min="0.5" max="4.0" step="0.1" value="2.0">
+
+                <div class="slider-row">
+                    <span class="slider-name">Core Points</span>
+                    <span class="slider-val" id="core-val">10000</span>
+                </div>
+                <input type="range" id="core-range" min="1000" max="50000" step="1000" value="10000">
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning locations list -->
+    <div class="section" id="warning-list-section" style="display: none; border-top: 1px solid var(--border-light); padding-top: 12px;">
+        <div class="section-label" style="color: var(--red);">Cảnh báo vị trí sụt lún</div>
+        <div id="warning-list-container" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;">
+            <!-- Dynamic warning list items will be injected here -->
+        </div>
+    </div>
+
+    <!-- Run button -->
+    <button class="btn-run" id="btn-run">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+        <span id="btn-label">Phân tích biến dạng</span>
+    </button>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-card-label">Trạng thái kết cấu</div>
+            <div class="status-badge status-safe" id="safety-badge">
+                <span class="dot"></span> An toàn
+            </div>
+            <div class="stat-card-sub" id="deformed-count">0 điểm vượt ngưỡng</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Sai lệch cực đại</div>
+            <div class="stat-card-value" id="max-disp-val">—</div>
+            <div class="stat-card-sub">Max absolute</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Sai lệch trung bình</div>
+            <div class="stat-card-value" id="mean-disp-val">—</div>
+            <div class="stat-card-sub">Mean displacement</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Độ lệch chuẩn</div>
+            <div class="stat-card-value" id="std-disp-val">—</div>
+            <div class="stat-card-sub">Std deviation</div>
+        </div>
+    </div>
+
+    <!-- 3D + Chart -->
+    <div class="workspace">
+        <!-- Three.js viewer -->
+        <div class="viewer-card">
+            <div class="viewer-header">
+                <span class="viewer-title">Bản đồ nhiệt biến dạng 3D (Heatmap)</span>
+                <span class="viewer-hint">Kéo để xoay · Cuộn để zoom</span>
+            </div>
+            <div class="canvas-wrap">
+                <canvas id="three-canvas"></canvas>
+
+                <!-- Tooltip floating card -->
+                <div id="warning-tooltip" style="position: absolute; display: none; background: rgba(15, 23, 42, 0.95); color: #fff; padding: 12px 16px; border-radius: 8px; border: 1px solid #ef4444; box-shadow: var(--shadow); z-index: 100; pointer-events: none; max-width: 250px; font-size: 11px;">
+                    <div style="font-weight: 700; color: #ef4444; font-size: 12px; margin-bottom: 5px; display: flex; align-items: center; gap: 5px;">
+                        <span style="font-size: 14px;">⚠️</span> CẢNH BÁO BIẾN DẠNG
+                    </div>
+                    <div style="margin-bottom: 4px;"><strong>Tọa độ:</strong> X: <span id="tip-x"></span>, Y: <span id="tip-y"></span></div>
+                    <div style="margin-bottom: 4px;"><strong>Sai lệch:</strong> <span id="tip-val" style="font-weight: 700; color: #f59e0b;"></span></div>
+                    <div><strong>Trạng thái:</strong> <span id="tip-level" style="font-weight: 700;"></span></div>
+                </div>
+
+                <!-- Colorbar -->
+                <div class="colorbar" style="width: 180px;">
+                    <div class="colorbar-title">Giải thích màu sắc (mm)</div>
+                    <div class="colorbar-inner">
+                        <div class="colorbar-bar"></div>
+                        <div class="colorbar-labels" style="height: 100px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <span id="legend-max" style="color: #dc2626; font-weight: bold;">+50 (Trồi lên)</span>
+                            <span style="color: #16a34a; font-weight: bold;">0 (Ổn định)</span>
+                            <span id="legend-min" style="color: #2563eb; font-weight: bold;">−50 (Sụt lún)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading overlay -->
+                <div class="overlay" id="loading-overlay">
+                    <div class="spinner"></div>
+                    <div class="overlay-text" id="progress-status">Đang chạy ICP &amp; M3C2...</div>
+                    <div class="overlay-sub">Xử lý trong container độc lập</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Histogram -->
+        <div class="chart-card">
+            <div class="chart-title">Phân phối sai lệch hình học</div>
+            <div class="chart-inner">
+                <canvas id="histogram-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ═══ SCRIPT ═══ -->
+<script>
+// ── URL params ──────────────────────────────────────────────
+const params      = new URLSearchParams(window.location.search);
+const isEmbedded  = params.get('embed') === 'true';
+const surveyName  = params.get('surveyName')  || '';
+const routeName   = params.get('routeName')   || '';
+const modelType   = params.get('modelType')   || 'road'; // road | bridge | tunnel | slope
+
+if (isEmbedded) document.body.classList.add('embedded');
+
+// ── Auto-set threshold by model type ─────────────────────────
+const THRESHOLD_MAP = {
+    bridge:  20,
+    tunnel:  20,
+    road:    50,
+    slope:   100,
+    default: 50
+};
+const autoThreshold = THRESHOLD_MAP[modelType] || THRESHOLD_MAP.default;
+const thresholdPreset = document.getElementById('threshold-preset');
+const thresholdHidden = document.getElementById('threshold-range');
+const thresholdBadge  = document.getElementById('threshold-badge');
+
+// Set the matching option as selected
+for (const opt of thresholdPreset.options) {
+    if (parseInt(opt.value) === autoThreshold) { opt.selected = true; break; }
+}
+thresholdHidden.value      = autoThreshold;
+thresholdBadge.textContent = autoThreshold + ' mm';
+
+thresholdPreset.addEventListener('change', () => {
+    const v = thresholdPreset.value;
+    thresholdHidden.value      = v;
+    thresholdBadge.textContent = v + ' mm';
+    document.getElementById('legend-max').textContent = '+' + v + ' (Trồi lên)';
+    document.getElementById('legend-min').textContent = '−' + v + ' (Sụt lún)';
+    validateScans();
+});
+
+// ── Populate dropdowns from URL tasks param ───────────────────
+const baseSelect    = document.getElementById('base-select');
+const compareSelect = document.getElementById('compare-select');
+const sameScanWarn  = document.getElementById('same-scan-warn');
+const btnRun        = document.getElementById('btn-run');
+const btnLabel      = document.getElementById('btn-label');
+
+function formatScanLabel(t) {
+    // Simplified label: just date + time (no survey_name, no route — those are already in campaign selectors above)
+    const dateStr = t.created_at ? t.created_at.split('T')[0] : null;
+    const timeStr = t.created_at && t.created_at.includes('T') ? t.created_at.split('T')[1].slice(0, 5) : null;
+    if (dateStr && timeStr) return `Quét ngày ${dateStr} lúc ${timeStr}`;
+    if (dateStr) return `Quét ngày ${dateStr}`;
+    if (t.filename) return t.filename;
+    return 'Bản quét';
+}
+
+const surveysParam    = params.get('surveys');
+const selectedSurveyId = params.get('selectedSurveyId');
+const tasksParam       = params.get('tasks');
+
+let allSurveys = [];
+
+if (surveysParam) {
+    try {
+        allSurveys = JSON.parse(decodeURIComponent(surveysParam));
+        if (allSurveys && allSurveys.length > 0) {
+            const campaignSelect = document.getElementById('survey-campaign-select');
+            const campaignSection = document.getElementById('campaign-section');
+            const scanPairSection = document.getElementById('scan-pair-section');
+
+            // Format scan label: show campaign name + date + time clearly
+            function formatScanOption(t) {
+                const dt = t.created_at || '';
+                const date = dt.split('T')[0] || '';
+                const time = dt.includes('T') ? dt.split('T')[1].slice(0, 5) : '';
+                const label = date && time ? `${date}  ${time}` : date || t.filename || 'Bản quét';
+                return label;
+            }
+
+            // Populate campaign dropdown with all surveys
+            campaignSelect.innerHTML = '';
+            allSurveys.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = s.name;
+                campaignSelect.appendChild(opt);
+            });
+
+            // Show campaign section
+            campaignSection.style.display = 'block';
+
+            // When campaign changes: populate T0 and T1 scan dropdowns
+            function onCampaignChange() {
+                const selectedId = campaignSelect.value;
+                const survey = allSurveys.find(s => s.id === selectedId);
+                const tasks = survey ? (survey.tasks || []) : [];
+
+                // Sort oldest → newest
+                tasks.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+                if (tasks.length > 0) {
+                    // Populate base-select (T0)
+                    baseSelect.innerHTML = '';
+                    tasks.forEach(t => {
+                        const opt = document.createElement('option');
+                        opt.value = t.twin_job_id || t.task_id || '';
+                        opt.textContent = formatScanOption(t);
+                        baseSelect.appendChild(opt);
+                    });
+                    baseSelect.selectedIndex = 0; // default: oldest
+
+                    // Populate compare-select (T1)
+                    compareSelect.innerHTML = '';
+                    tasks.forEach(t => {
+                        const opt = document.createElement('option');
+                        opt.value = t.twin_job_id || t.task_id || '';
+                        opt.textContent = formatScanOption(t);
+                        compareSelect.appendChild(opt);
+                    });
+                    compareSelect.selectedIndex = tasks.length > 1 ? tasks.length - 1 : 0; // default: newest
+
+                    // Auto threshold
+                    const modelTypeVal = (tasks[0]?.model_type) || 'road';
+                    const targetThreshold = THRESHOLD_MAP[modelTypeVal] || THRESHOLD_MAP.default;
+                    const thresholdPreset = document.getElementById('threshold-preset');
+                    for (const opt of thresholdPreset.options) {
+                        if (parseInt(opt.value) === targetThreshold) { opt.selected = true; break; }
+                    }
+                    thresholdHidden.value = targetThreshold;
+                    thresholdBadge.textContent = targetThreshold + ' mm';
+                    document.getElementById('legend-max').textContent = '+' + targetThreshold + ' (Trồi lên)';
+                    document.getElementById('legend-min').textContent = '−' + targetThreshold + ' (Sụt lún)';
+
+                    // Show scan pair section
+                    scanPairSection.style.display = 'block';
+                } else {
+                    // No 3D scans in this campaign
+                    baseSelect.innerHTML = '<option value="">Chưa có bản quét 3D trong đợt này</option>';
+                    compareSelect.innerHTML = '<option value="">Chưa có bản quét 3D trong đợt này</option>';
+                    scanPairSection.style.display = 'block';
+                }
+
+                validateScans();
+            }
+
+            campaignSelect.addEventListener('change', onCampaignChange);
+
+            // Initial: select campaign matching selectedSurveyId or first
+            if (selectedSurveyId) {
+                const idx = allSurveys.findIndex(s => s.id === selectedSurveyId);
+                if (idx !== -1) campaignSelect.selectedIndex = idx;
+            } else {
+                campaignSelect.selectedIndex = 0;
+            }
+            onCampaignChange();
+        }
+    } catch (e) {
+        console.error('Lỗi phân tích surveysParam', e);
+    }
+
+} else if (tasksParam) {
+    try {
+        const tasks = JSON.parse(decodeURIComponent(tasksParam));
+        if (tasks && tasks.length > 0) {
+            tasks.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            populateDropdowns(tasks);
+        } else {
+            clearScansDropdowns();
+        }
+    } catch (e) { console.error('tasks parse error', e); }
+}
+
+function populateDropdowns(tasks) {
+    baseSelect.innerHTML    = '';
+    compareSelect.innerHTML = '';
+    tasks.forEach(t => {
+        const label = formatScanLabel(t);
+        const val   = t.twin_job_id || t.task_id || '';
+        const makeOpt = () => {
+            const o = document.createElement('option');
+            o.value       = val;
+            o.textContent = label;
+            return o;
+        };
+        baseSelect.appendChild(makeOpt());
+        compareSelect.appendChild(makeOpt());
+    });
+    baseSelect.selectedIndex    = 0;
+    compareSelect.selectedIndex = tasks.length > 1 ? tasks.length - 1 : 0;
+    validateScans();
+}
+
+// ── Validation: same scan ──────────────────────────────────────
+function validateScans() {
+    const scanSame = baseSelect.value !== '' && baseSelect.value === compareSelect.value;
+    sameScanWarn.classList.toggle('visible', scanSame);
+    btnRun.disabled = (scanSame || !baseSelect.value || !compareSelect.value);
+    
+    if (scanSame || !baseSelect.value || !compareSelect.value) {
+        if (typeof resetUIAndHeatmap === 'function') resetUIAndHeatmap();
+    } else {
+        if (typeof checkExistingComparison === 'function') checkExistingComparison();
+    }
+}
+baseSelect.addEventListener('change', validateScans);
+compareSelect.addEventListener('change', validateScans);
+validateScans();
+
+function clearScansDropdowns() {
+    const noDataOpt = () => {
+        const o = document.createElement('option');
+        o.value = ''; o.textContent = 'Chưa có bản quét 3D cho đợt này';
+        return o;
+    };
+    baseSelect.innerHTML    = ''; baseSelect.appendChild(noDataOpt());
+    compareSelect.innerHTML = ''; compareSelect.appendChild(noDataOpt());
+    validateScans();
+}
+
+
+// ── AI toggle ─────────────────────────────────────────────────
+const aiToggle       = document.getElementById('ai-auto-toggle');
+const aiCard         = document.getElementById('ai-card');
+const aiStatusText   = document.getElementById('ai-status-text');
+const advancedSliders = document.getElementById('advanced-sliders');
+
+function applyAIToggle() {
+    const on = aiToggle.checked;
+    aiCard.classList.toggle('active', on);
+    advancedSliders.classList.toggle('slider-disabled', on);
+    aiStatusText.innerHTML = on
+        ? '<span class="ai-status-ok">Đang bật</span> — AI phân tích mật độ điểm để tự chọn D, d, H phù hợp.'
+        : '<span class="ai-status-warn">Đã tắt</span> — Dùng tham số thủ công bên dưới.';
+    btnLabel.textContent = on ? 'Phân tích biến dạng' : 'Chạy thủ công';
+}
+aiToggle.addEventListener('change', () => {
+    applyAIToggle();
+    validateScans();
+});
+applyAIToggle();
+
+// Background road mesh display mode
+const roadDisplaySelect = document.getElementById('road-display-select');
+if (roadDisplaySelect) {
+    roadDisplaySelect.addEventListener('change', () => {
+        const val = roadDisplaySelect.value;
+        if (!roadMesh) return;
+        if (val === 'hidden') {
+            roadMesh.visible = false;
+        } else {
+            roadMesh.visible = true;
+            roadMesh.traverse(child => {
+                if (child.isMesh) {
+                    child.material.transparent = (val === 'transparent');
+                    child.material.opacity = (val === 'transparent') ? 0.75 : 1.0;
+                    child.material.depthWrite = (val === 'opaque');
+                }
+            });
+        }
+    });
+}
+
+// Toggle hiển thị vùng ổn định (Điểm xanh)
+const safePointsToggle = document.getElementById('safe-points-toggle');
+if (safePointsToggle) {
+    safePointsToggle.addEventListener('change', () => {
+        const show = safePointsToggle.checked;
+        if (pointCloudGroup) {
+            const stableObj = pointCloudGroup.getObjectByName("stablePoints");
+            if (stableObj) {
+                stableObj.visible = show;
+            }
+        }
+    });
+}
+
+// ── Advanced collapse ─────────────────────────────────────────
+const advToggle = document.getElementById('advanced-toggle');
+const advBody   = document.getElementById('advanced-body');
+advToggle.addEventListener('click', () => {
+    advToggle.classList.toggle('open');
+    advBody.classList.toggle('open');
+});
+
+// ── Range sliders ─────────────────────────────────────────────
+const rangeMap = {
+    'normal-range': { out: 'normal-val', suffix: ' m' },
+    'proj-range':   { out: 'proj-val',   suffix: ' m' },
+    'depth-range':  { out: 'depth-val',  suffix: ' m' },
+    'core-range':   { out: 'core-val',   suffix: ''   }
+};
+for (const [id, cfg] of Object.entries(rangeMap)) {
+    const el = document.getElementById(id);
+    const out = document.getElementById(cfg.out);
+    if (el && out) {
+        el.addEventListener('input', () => { out.textContent = el.value + cfg.suffix; });
+        el.addEventListener('change', () => { validateScans(); });
+    }
+}
+
+// ── Three.js setup ────────────────────────────────────────────
+let scene, camera, renderer, controls, pointCloudGroup = null;
+let roadMesh = null;
+let markerGroup = null;
+let raycaster = null;
+let mouse = null;
+let heatmapCenter = null; // Tâm của điểm cloud so sánh phục vụ căn lề
+
+
+function initThree() {
+    const wrap   = document.querySelector('.canvas-wrap');
+    const canvas = document.getElementById('three-canvas');
+    scene  = new THREE.Scene();
+    scene.background = new THREE.Color(0xf8fafc);
+
+    camera = new THREE.PerspectiveCamera(45, wrap.clientWidth / wrap.clientHeight, 0.01, 1000);
+    camera.position.set(0, 0, 5);
+
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.4);
+    dir.position.set(1, 2, 3);
+    scene.add(dir);
+
+    // Group for warning flags
+    markerGroup = new THREE.Group();
+    scene.add(markerGroup);
+
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+
+    // Raycast on click
+    canvas.addEventListener('click', event => {
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(markerGroup.children);
+        
+        if (intersects.length > 0) {
+            const clickedSprite = intersects[0].object;
+            const clusterData = clickedSprite.userData;
+            showWarningTooltip(event.clientX - rect.left, event.clientY - rect.top, clusterData);
+        } else {
+            hideWarningTooltip();
+        }
+    });
+
+    const ro = new ResizeObserver(() => {
+        camera.aspect = wrap.clientWidth / wrap.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    });
+    ro.observe(wrap);
+
+    (function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    })();
+}
+
+// Tạo kết cấu hạt tròn mịn cho điểm đám mây
+function createRoundDotTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 16;
+    canvas.height = 16;
+    const ctx = canvas.getContext('2d');
+    
+    const grad = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+    grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.7)');
+    grad.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+    
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(8, 8, 8, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    return new THREE.CanvasTexture(canvas);
+}
+
+// Căn lề đồng bộ mô hình thực tế trùng khớp với đám mây điểm
+function alignModels() {
+    if (pointCloudGroup && roadMesh && heatmapCenter) {
+        roadMesh.position.copy(heatmapCenter).multiplyScalar(-1);
+    }
+}
+
+function loadHeatmapGLB(url) {
+    const loader = new THREE.GLTFLoader();
+    loader.load(url, gltf => {
+        if (pointCloudGroup) scene.remove(pointCloudGroup);
+        pointCloudGroup = new THREE.Group();
+        
+        let pointCloudObject = null;
+        const dotTexture = createRoundDotTexture();
+        
+        gltf.scene.traverse(child => { 
+            if (child.isMesh) {
+                const clone = child.clone();
+                pointCloudGroup.add(clone);
+            } else if (child.isPoints) {
+                pointCloudObject = child; // Giữ tham chiếu gốc để trích xuất cảnh báo
+                
+                const geom = child.geometry;
+                if (geom && geom.attributes.position && geom.attributes.color) {
+                    const positions = geom.attributes.position.array;
+                    const colors = geom.attributes.color.array;
+                    const numPoints = positions.length / 3;
+                    
+                    const stablePos = [];
+                    const stableCol = [];
+                    const deformedPos = [];
+                    const deformedCol = [];
+                    
+                    for (let i = 0; i < numPoints; i++) {
+                        const x = positions[i * 3];
+                        const y = positions[i * 3 + 1];
+                        const z = positions[i * 3 + 2];
+                        
+                        const r = colors[i * 3];
+                        const g = colors[i * 3 + 1];
+                        const b = colors[i * 3 + 2];
+                        
+                        // Xác định điểm biến dạng (Đỏ hoặc Xanh dương) dựa trên phân tích màu sắc
+                        const isDeformed = (g < 0.35 && (r > 0.65 || b > 0.65));
+                        
+                        if (isDeformed) {
+                            deformedPos.push(x, y, z);
+                            deformedCol.push(r, g, b);
+                        } else {
+                            stablePos.push(x, y, z);
+                            stableCol.push(r, g, b);
+                        }
+                    }
+                    
+                    // 1. Tạo đám mây điểm ổn định (Màu xanh lá - mờ nhạt, nhỏ mịn)
+                    if (stablePos.length > 0) {
+                        const stableGeom = new THREE.BufferGeometry();
+                        stableGeom.setAttribute('position', new THREE.Float32BufferAttribute(stablePos, 3));
+                        stableGeom.setAttribute('color', new THREE.Float32BufferAttribute(stableCol, 3));
+                        
+                        const stableMat = new THREE.PointsMaterial({
+                            size: 0.05, // Kích thước vật lý trong không gian 3D (5cm)
+                            sizeAttenuation: true, // Bật để điểm to/nhỏ theo khoảng cách camera
+                            vertexColors: true,
+                            transparent: true,
+                            opacity: 0.6, // Tăng opacity để dễ nhìn hơn thay vì 0.12
+                            map: dotTexture,
+                            depthWrite: false
+                        });
+                        const stablePointsObj = new THREE.Points(stableGeom, stableMat);
+                        stablePointsObj.name = "stablePoints";
+                        
+                        const safeToggle = document.getElementById('safe-points-toggle');
+                        stablePointsObj.visible = safeToggle ? safeToggle.checked : true;
+                        pointCloudGroup.add(stablePointsObj);
+                    }
+                    
+                    // 2. Tạo đám mây điểm biến dạng (Màu đỏ/xanh dương - nổi bật, tròn mịn)
+                    if (deformedPos.length > 0) {
+                        const deformedGeom = new THREE.BufferGeometry();
+                        deformedGeom.setAttribute('position', new THREE.Float32BufferAttribute(deformedPos, 3));
+                        deformedGeom.setAttribute('color', new THREE.Float32BufferAttribute(deformedCol, 3));
+                        
+                        const deformedMat = new THREE.PointsMaterial({
+                            size: 0.08, // Kích thước vật lý trong 3D (8cm) để các điểm đè lên nhau tạo thành dải màu
+                            sizeAttenuation: true, // Bật để điểm to/nhỏ theo khoảng cách
+                            vertexColors: true,
+                            transparent: true,
+                            opacity: 0.9,
+                            map: dotTexture,
+                            depthWrite: false
+                        });
+                        const deformedPointsObj = new THREE.Points(deformedGeom, deformedMat);
+                        deformedPointsObj.name = "deformedPoints";
+                        pointCloudGroup.add(deformedPointsObj);
+                    }
+                }
+            }
+        });
+        
+        const box = new THREE.Box3().setFromObject(pointCloudGroup);
+        heatmapCenter = box.getCenter(new THREE.Vector3());
+        pointCloudGroup.position.sub(heatmapCenter);
+        scene.add(pointCloudGroup);
+        
+        // Căn lề đồng bộ với mô hình thực tế
+        alignModels();
+        
+        // --- TRÍCH XUẤT CẢNH BÁO BIẾN DẠNG & CẮM CỜ CẢNH BÁO 3D ---
+        if (pointCloudObject && pointCloudObject.geometry) {
+            extractAndRenderWarnings(pointCloudObject, heatmapCenter);
+        }
+        
+        const size = box.getSize(new THREE.Vector3()).length();
+        camera.position.set(0, 0, size * 1.5);
+        controls.reset();
+    }, undefined, err => console.error('GLB load error', err));
+}
+
+
+// ── WebGL Warning & Tooltip Helpers ───────────────────────────
+function showWarningTooltip(x, y, data) {
+    const tooltip = document.getElementById('warning-tooltip');
+    if (!tooltip) return;
+    tooltip.style.display = 'block';
+    tooltip.style.left = (x + 15) + 'px';
+    tooltip.style.top = (y + 15) + 'px';
+    
+    document.getElementById('tip-x').textContent = data.cx.toFixed(1);
+    document.getElementById('tip-y').textContent = data.cy.toFixed(1);
+    
+    const val = data.maxVal;
+    const absVal = Math.abs(val);
+    const typeStr = val < 0 ? 'Sụt lún (Lún)' : 'Trồi đất (Trồi)';
+    document.getElementById('tip-val').textContent = `${val > 0 ? '+' : ''}${val.toFixed(1)} mm (${typeStr})`;
+    
+    const levelEl = document.getElementById('tip-level');
+    const threshold = parseFloat(thresholdHidden.value);
+    if (absVal > threshold * 1.5) {
+        levelEl.textContent = 'CỰC KỲ NGUY HIỂM';
+        levelEl.style.color = '#dc2626';
+    } else if (absVal > threshold) {
+        levelEl.textContent = 'NGUY HIỂM';
+        levelEl.style.color = '#ef4444';
+    } else {
+        levelEl.textContent = 'CẢNH BÁO';
+        levelEl.style.color = '#f59e0b';
+    }
+}
+
+function hideWarningTooltip() {
+    const tooltip = document.getElementById('warning-tooltip');
+    if (tooltip) tooltip.style.display = 'none';
+}
+
+function loadTexturedRoadMesh(compareId) {
+    if (!compareId) return;
+    const url = `/files/${compareId}/3d_output/texturedMesh.glb`;
+    const loader = new THREE.GLTFLoader();
+    
+    loader.load(url, gltf => {
+        if (roadMesh) scene.remove(roadMesh);
+        roadMesh = gltf.scene;
+        
+        const displayVal = document.getElementById('road-display-select').value;
+        if (displayVal === 'hidden') {
+            roadMesh.visible = false;
+        } else {
+            roadMesh.visible = true;
+            roadMesh.traverse(child => {
+                if (child.isMesh) {
+                    child.material.transparent = (displayVal === 'transparent');
+                    child.material.opacity = (displayVal === 'transparent') ? 0.75 : 1.0;
+                    child.material.depthWrite = (displayVal === 'opaque');
+                }
+            });
+        }
+        
+        // Căn lề mô hình thực tế trùng khớp hệ tọa độ với điểm cloud
+        if (heatmapCenter) {
+            alignModels();
+        } else {
+            const box = new THREE.Box3().setFromObject(roadMesh);
+            const center = box.getCenter(new THREE.Vector3());
+            roadMesh.position.sub(center);
+        }
+        
+        scene.add(roadMesh);
+    }, undefined, err => {
+        console.warn('Không thể tải mô hình thực tế nền (chỉ hiển thị đám mây điểm):', err);
+    });
+}
+
+
+function extractAndRenderWarnings(pointsObj, center) {
+    // Clear old markers
+    if (markerGroup) {
+        while(markerGroup.children.length > 0) {
+            markerGroup.remove(markerGroup.children[0]);
+        }
+    }
+    hideWarningTooltip();
+    
+    const geom = pointsObj.geometry;
+    if (!geom || !geom.attributes.position || !geom.attributes.color) return;
+    
+    const positions = geom.attributes.position.array;
+    const colors = geom.attributes.color.array;
+    const numPoints = positions.length / 3;
+    
+    const anomalies = [];
+    const threshold = parseFloat(thresholdHidden.value);
+    
+    for (let i = 0; i < numPoints; i++) {
+        const r = colors[i * 3];
+        const g = colors[i * 3 + 1];
+        const b = colors[i * 3 + 2];
+        
+        if (g < 0.35 && (r > 0.65 || b > 0.65)) {
+            const x = positions[i * 3];
+            const y = positions[i * 3 + 1];
+            const z = positions[i * 3 + 2];
+            
+            let val = 0;
+            if (r > b) {
+                val = r * threshold; // trồi đất
+            } else {
+                val = -b * threshold; // sụt lún
+            }
+            anomalies.push({ x, y, z, val });
+        }
+    }
+    
+    // Gom cụm (Clustering) các điểm đứng gần nhau (< 3m)
+    const clusters = [];
+    const distThreshold = 3.0;
+    
+    anomalies.forEach(pt => {
+        let added = false;
+        for (let c of clusters) {
+            const dx = pt.x - c.cx;
+            const dy = pt.y - c.cy;
+            const dz = pt.z - c.cz;
+            const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            if (dist < distThreshold) {
+                c.points.push(pt);
+                c.cx = c.points.reduce((sum, p) => sum + p.x, 0) / c.points.length;
+                c.cy = c.points.reduce((sum, p) => sum + p.y, 0) / c.points.length;
+                c.cz = c.points.reduce((sum, p) => sum + p.z, 0) / c.points.length;
+                
+                if (Math.abs(pt.val) > Math.abs(c.maxVal)) {
+                    c.maxVal = pt.val;
+                }
+                added = true;
+                break;
+            }
+        }
+        if (!added) {
+            clusters.push({
+                cx: pt.x,
+                cy: pt.y,
+                cz: pt.z,
+                maxVal: pt.val,
+                points: [pt]
+            });
+        }
+    });
+    
+    // Sắp xếp các cụm nguy hiểm nhất lên đầu và giới hạn tối đa 5 cụm
+    clusters.sort((a, b) => Math.abs(b.maxVal) - Math.abs(a.maxVal));
+    const topClusters = clusters.slice(0, 5);
+    
+    // Cắm cờ 3D nhấp nháy cho các cụm nguy hiểm
+    const markerTex = createWarningMarkerTexture();
+    topClusters.forEach((c, idx) => {
+        const mat = new THREE.SpriteMaterial({ map: markerTex, depthTest: false });
+        const sprite = new THREE.Sprite(mat);
+        sprite.scale.set(0.8, 0.8, 1);
+        // Định vị trong không gian 3D tương đối theo tâm
+        sprite.position.set(c.cx - center.x, c.cy - center.y, c.cz - center.z + 0.6);
+        sprite.userData = c;
+        markerGroup.add(sprite);
+    });
+    
+    // Cập nhật danh sách điểm ở sidebar
+    updateWarningSidebarList(topClusters);
+}
+
+function createWarningMarkerTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    
+    // Vẽ viền ngoài đỏ, nền cam/vàng
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    ctx.arc(32, 32, 28, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.arc(32, 32, 24, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    // Dấu chấm cảm màu trắng '!'
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 36px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('!', 32, 45);
+    
+    return new THREE.CanvasTexture(canvas);
+}
+
+function updateWarningSidebarList(clusters) {
+    const listContainer = document.getElementById('warning-list-container');
+    const listSection = document.getElementById('warning-list-section');
+    
+    if (!listContainer || !listSection) return;
+    listContainer.innerHTML = '';
+    
+    if (clusters.length > 0) {
+        listSection.style.display = 'block';
+        clusters.forEach((c, idx) => {
+            const item = document.createElement('div');
+            item.style.padding = '8px 10px';
+            item.style.background = 'var(--red-light)';
+            item.style.border = '1px solid var(--red-border)';
+            item.style.borderRadius = 'var(--radius-sm)';
+            item.style.cursor = 'pointer';
+            item.style.display = 'flex';
+            item.style.justifyContent = 'space-between';
+            item.style.alignItems = 'center';
+            item.style.fontSize = '11px';
+            item.style.transition = 'all .15s';
+            
+            item.addEventListener('mouseenter', () => { item.style.background = '#fee2e2'; });
+            item.addEventListener('mouseleave', () => { item.style.background = 'var(--red-light)'; });
+            
+            const typeStr = c.maxVal < 0 ? 'Sụt lún' : 'Trồi đất';
+            const valColor = c.maxVal < 0 ? 'var(--accent)' : 'var(--red)';
+            
+            item.innerHTML = `
+                <div>
+                    <strong style="color: var(--red);">#${idx + 1} - ${typeStr}</strong>
+                    <div style="color: var(--text-3); font-size: 9px; margin-top: 2px;">Tọa độ: X:${c.cx.toFixed(1)}, Y:${c.cy.toFixed(1)}</div>
+                </div>
+                <span style="font-weight: 700; color: ${valColor}; font-size: 11px;">${c.maxVal.toFixed(1)} mm</span>
+            `;
+            
+            item.addEventListener('click', () => {
+                if (pointCloudGroup) {
+                    const box = new THREE.Box3().setFromObject(pointCloudGroup);
+                    const center = box.getCenter(new THREE.Vector3());
+                    gsapCameraFly(c.cx - center.x, c.cy - center.y, c.cz - center.z);
+                    
+                    const screenPos = getScreenPosition(c.cx - center.x, c.cy - center.y, c.cz - center.z + 0.6);
+                    showWarningTooltip(screenPos.x, screenPos.y, c);
+                }
+            });
+            listContainer.appendChild(item);
+        });
+    } else {
+        listSection.style.display = 'none';
+    }
+}
+
+function getScreenPosition(x, y, z) {
+    const vector = new THREE.Vector3(x, y, z);
+    vector.project(camera);
+    
+    const wrap = document.querySelector('.canvas-wrap');
+    const widthHalf = wrap.clientWidth / 2;
+    const heightHalf = wrap.clientHeight / 2;
+    
+    return {
+        x: (vector.x * widthHalf) + widthHalf,
+        y: -(vector.y * heightHalf) + heightHalf
+    };
+}
+
+function gsapCameraFly(targetX, targetY, targetZ) {
+    const duration = 25;
+    let frame = 0;
+    
+    const startCamX = camera.position.x;
+    const startCamY = camera.position.y;
+    const startCamZ = camera.position.z;
+    
+    const startTargetX = controls.target.x;
+    const startTargetY = controls.target.y;
+    const startTargetZ = controls.target.z;
+    
+    const destCamX = targetX;
+    const destCamY = targetY + 6.0;
+    const destCamZ = targetZ + 6.0;
+    
+    function animateFly() {
+        frame++;
+        const t = frame / duration;
+        const ease = t * (2 - t);
+        
+        camera.position.x = startCamX + (destCamX - startCamX) * ease;
+        camera.position.y = startCamY + (destCamY - startCamY) * ease;
+        camera.position.z = startCamZ + (destCamZ - startCamZ) * ease;
+        
+        controls.target.x = startTargetX + (targetX - startTargetX) * ease;
+        controls.target.y = startTargetY + (targetY - startTargetY) * ease;
+        controls.target.z = startTargetZ + (targetZ - startTargetZ) * ease;
+        
+        controls.update();
+        
+        if (frame < duration) {
+            requestAnimationFrame(animateFly);
+        }
+    }
+    animateFly();
+}
+
+// ── Chart.js histogram ────────────────────────────────────────
+let chart = null;
+
+function initChart() {
+    const ctx = document.getElementById('histogram-chart').getContext('2d');
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Số điểm',
+                data: [],
+                backgroundColor: 'rgba(37,99,235,.25)',
+                borderColor: 'rgba(37,99,235,.7)',
+                borderWidth: 1,
+                borderRadius: 2,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 }, color: '#94a3b8' } },
+                y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 }, color: '#94a3b8' } }
+            }
+        }
+    });
+}
+
+function updateChart(meanM, stdM, count) {
+    if (!chart) return;
+    const bins = 20;
+    const lo   = (meanM - 3 * stdM) * 1000;
+    const hi   = (meanM + 3 * stdM) * 1000;
+    const step = (hi - lo) / bins;
+    const labels = [], data = [];
+    for (let i = 0; i < bins; i++) {
+        const x = lo + i * step;
+        labels.push(x.toFixed(0) + ' mm');
+        // Gaussian approximation
+        const z = (x + step / 2 - meanM * 1000) / (stdM * 1000 || 1);
+        data.push(Math.round(count / bins * Math.exp(-0.5 * z * z) * 2.5));
+    }
+    chart.data.labels   = labels;
+    chart.data.datasets[0].data = data;
+    chart.update();
+}
+
+// ── Update UI stats ───────────────────────────────────────────
+function updateStats(report) {
+    const stats = report.stats || {};
+    const mm = v => v != null ? (v * 1000).toFixed(1) + ' mm' : '—';
+    const threshold_m = parseFloat(thresholdHidden.value) / 1000;
+
+    document.getElementById('max-disp-val').textContent  = mm(stats.max_displacement_m);
+    document.getElementById('mean-disp-val').textContent = mm(stats.mean_displacement_m);
+    document.getElementById('std-disp-val').textContent  = mm(stats.std_displacement_m);
+
+    const exceed = stats.deformed_points_count || 0;
+    document.getElementById('deformed-count').textContent = exceed.toLocaleString() + ' điểm vượt ngưỡng';
+
+    const badge = document.getElementById('safety-badge');
+    const safeStr = stats.safety_status === 'danger' ? 'Nguy hiểm' : stats.safety_status === 'warning' ? 'Cảnh báo' : 'An toàn';
+    badge.textContent = '';
+    const dot = document.createElement('span'); dot.className = 'dot';
+    badge.appendChild(dot);
+    badge.appendChild(document.createTextNode(' ' + safeStr));
+    badge.className = 'status-badge ' + (stats.safety_status === 'danger' ? 'status-danger' : stats.safety_status === 'warning' ? 'status-warning' : 'status-safe');
+
+    const v = thresholdHidden.value;
+    document.getElementById('legend-max').textContent = '+' + v + ' (Trồi lên)';
+    document.getElementById('legend-min').textContent = '−' + v + ' (Sụt lún)';
+
+
+    if (stats.mean_displacement_m != null) {
+        updateChart(stats.mean_displacement_m, stats.std_displacement_m || 0, stats.total_compare_points || 1000);
+    }
+}
+
+// ── Check if comparison exists ──────────────────────────────────
+async function checkExistingComparison() {
+    const baseId    = baseSelect.value;
+    const compareId = compareSelect.value;
+    if (!baseId || !compareId || baseId === compareId) {
+        resetUIAndHeatmap();
+        return;
+    }
+
+    const useAI     = aiToggle.checked;
+    const threshold = parseFloat(thresholdHidden.value);
+    
+    let url = `/api/v1/twin/compare/check?base_job_id=${baseId}&compare_job_id=${compareId}&threshold_mm=${threshold}&use_ai_params=${useAI}`;
+    if (!useAI) {
+        const normal = parseFloat(document.getElementById('normal-range').value);
+        const proj = parseFloat(document.getElementById('proj-range').value);
+        const depth = parseFloat(document.getElementById('depth-range').value);
+        const core = parseInt(document.getElementById('core-range').value);
+        url += `&normal_scale=${normal}&projection_scale=${proj}&max_depth=${depth}&core_points_sample=${core}`;
+    }
+
+    try {
+        const res = await fetch(url);
+        if (res.ok) {
+            const data = await res.json();
+            if (data.exists && data.compare_id) {
+                console.log('🔄 Phát hiện so sánh cũ:', data.compare_id);
+                updateStats(data.report);
+                loadHeatmapGLB(`/files-compare/${data.compare_id}/displacement_model.glb`);
+                loadTexturedRoadMesh(baseId); // Cân nền đường gốc T0
+                btnLabel.textContent = 'Xem kết quả (Đã lưu)';
+
+                return;
+            }
+        }
+    } catch (err) {
+        console.error('Check existing compare error:', err);
+    }
+    
+    resetUIAndHeatmap();
+}
+
+function resetUIAndHeatmap() {
+    document.getElementById('max-disp-val').textContent  = '—';
+    document.getElementById('mean-disp-val').textContent = '—';
+    document.getElementById('std-disp-val').textContent  = '—';
+    document.getElementById('deformed-count').textContent = '0 điểm vượt ngưỡng';
+    
+    const badge = document.getElementById('safety-badge');
+    badge.className = 'status-badge status-safe';
+    badge.innerHTML = '<span class="dot"></span> Chưa phân tích';
+
+    if (chart) {
+        chart.data.labels = [];
+        chart.data.datasets[0].data = [];
+        chart.update();
+    }
+    
+    if (pointCloudGroup) {
+        scene.remove(pointCloudGroup);
+        pointCloudGroup = null;
+    }
+    
+    if (roadMesh) {
+        scene.remove(roadMesh);
+        roadMesh = null;
+    }
+    
+    if (markerGroup) {
+        while (markerGroup.children.length > 0) {
+            markerGroup.remove(markerGroup.children[0]);
+        }
+    }
+    
+    const listSection = document.getElementById('warning-list-section');
+    if (listSection) listSection.style.display = 'none';
+    
+    hideWarningTooltip();
+    
+    btnLabel.textContent = aiToggle.checked ? 'Phân tích biến dạng' : 'Chạy thủ công';
+}
+
+// ── Run button ────────────────────────────────────────────────
+const overlay      = document.getElementById('loading-overlay');
+const progressText = document.getElementById('progress-status');
+
+btnRun.addEventListener('click', async () => {
+    const baseId    = baseSelect.value;
+    const compareId = compareSelect.value;
+    if (!baseId || !compareId || baseId === compareId) return;
+
+    const useAI     = aiToggle.checked;
+    const threshold = parseFloat(thresholdHidden.value);
+
+    overlay.classList.add('visible');
+    progressText.textContent = useAI
+        ? 'AI đang phân tích mật độ điểm và hiệu chỉnh tham số...'
+        : 'Đang xếp hàng tác vụ so sánh...';
+    btnRun.disabled = true;
+
+    try {
+        const payload = { base_job_id: baseId, compare_job_id: compareId, threshold_mm: threshold, use_ai_params: useAI };
+        if (!useAI) {
+            payload.normal_scale       = parseFloat(document.getElementById('normal-range').value);
+            payload.projection_scale   = parseFloat(document.getElementById('proj-range').value);
+            payload.max_depth          = parseFloat(document.getElementById('depth-range').value);
+            payload.core_points_sample = parseInt(document.getElementById('core-range').value);
+        }
+
+        const res = await fetch('/api/v1/twin/compare', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || 'Lỗi gọi API.');
+        }
+
+        const result = await res.json();
+        pollStatus(result.compare_id);
+
+    } catch (err) {
+        alert('Lỗi: ' + err.message);
+        overlay.classList.remove('visible');
+        btnRun.disabled = false;
+    }
+});
+
+// ── Poll status ───────────────────────────────────────────────
+async function pollStatus(cid) {
+    try {
+        const res  = await fetch(`/api/v1/twin/compare/status/${cid}`);
+        const data = (await res.json()).data;
+        const st   = data.status;
+
+        if (st === 'completed') {
+            progressText.textContent = 'Hoàn tất! Đang tải mô hình...';
+            updateStats(data.report);
+            loadHeatmapGLB(`/files-compare/${cid}/displacement_model.glb`);
+            loadTexturedRoadMesh(baseSelect.value); // Cân nền đường gốc T0
+            setTimeout(() => { overlay.classList.remove('visible'); btnRun.disabled = false; }, 800);
+
+        } else if (st === 'failed') {
+            alert('Phân tích thất bại: ' + (data.error || 'Lỗi không xác định'));
+            overlay.classList.remove('visible'); btnRun.disabled = false;
+        } else {
+            progressText.textContent = st === 'queued'
+                ? 'Đang xếp hàng container M3C2...'
+                : 'Đang chạy ICP & M3C2 trong container...';
+            setTimeout(() => pollStatus(cid), 2000);
+        }
+    } catch (err) {
+        console.error('Poll error', err);
+        setTimeout(() => pollStatus(cid), 3000);
+    }
+}
+
+// ── Init ──────────────────────────────────────────────────────
+initThree();
+initChart();
+</script>
+</body>
+</html>

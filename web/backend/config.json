@@ -1,0 +1,9 @@
+{
+    "crack_api_url": "http://localhost:8000",
+    "crack_api_token": "secure_token_CrackAPI_12345678@@",
+    "ragflow_api_url": "http://localhost:8088",
+    "ragflow_api_token": "secure_token_RAGFlow_12345678@@",
+    "ragflow_base_url": "http://localhost:9380/api/v1/chats_openai/4a01db6a34bf11f18d27c9d2e6f1f7e7",
+    "dataset_id": "0e96e9ea500711f19dbdbb185f0c98a3",
+    "ragflow_api_key": "ragflow-P4S7ZLEyR2ZxHuHL11qEi1TnmzxYAlzGEhAM1wcrKTw"
+}

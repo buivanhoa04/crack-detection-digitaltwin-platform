@@ -1,0 +1,6 @@
+FROM buihoa04/digitaltwin_private:latest
+
+WORKDIR /app
+COPY main.py /app/main.py
+COPY tracking_4d.py /app/tracking_4d.py
+

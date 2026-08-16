@@ -1,0 +1,12 @@
+__pycache__/**
+*.pyc
+.env
+.venv/**
+venv/**
+uploads/**
+sources/**
+temp/**
+temp_uploads/**
+**/temp_uploads/**
+*.mp4
+*.MP4

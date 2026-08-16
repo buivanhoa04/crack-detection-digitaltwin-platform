@@ -1,0 +1,55 @@
+services:
+  master_api:
+    build: .
+    image: buihoa04/digital_twin_v1:latest
+    container_name: digital_twin_master
+    ports:
+      - "8090:8090"
+    volumes:
+      # Mount Docker Socket để Master API gọi DooD (sinh container COLMAP/OpenMVS)
+      - /var/run/docker.sock:/var/run/docker.sock
+
+      # Mount thư mục dữ liệu (vế trái = đường dẫn thật trên máy chủ Host)
+      - D:/crack_api/sources:/data/file/sources
+      - ./main.py:/app/main.py
+      - ./static:/app/static
+
+    environment:
+      # Đường dẫn vật lý trên Host (truyền vào lệnh docker run cho COLMAP)
+      - HOST_SOURCES_DIR=D:\crack_api\sources
+
+      # Đường dẫn bên trong Master API Container
+      - INTERNAL_SOURCES_DIR=/data/file/sources
+
+      # Trỏ tới YOLO AI API
+      - YOLO_API_URL=http://crack_api_ai:8000/api/v1/detect/image
+      - YOLO_API_TOKEN=secure_token_CrackAPI_12345678@@
+
+      # FPS cắt video (5 = 5 frame/giây, phù hợp Drone bay nhanh)
+      - FRAME_EXTRACT_FPS=5
+
+      # Chất lượng mesh: 0 = cao nhất (tốn VRAM), 1 = trung bình, 2 = tiết kiệm (RTX 3050 4GB)
+      - RESOLUTION_LEVEL=2
+
+      # GPU flag: "all" = dùng GPU, "" (rỗng) = CPU only
+      - DOCKER_GPU_FLAG=all
+
+      # [MỚI] Chiều dài tối đa ảnh resize trước COLMAP (giảm tải VRAM 4K→2K)
+      - MAX_IMAGE_DIM=2048
+
+      # [MỚI] Số frame tối thiểu để chạy pipeline 3D (video quá ngắn sẽ bị reject)
+      - MIN_FRAMES=30
+
+      # [MỚI] Ngưỡng % ảnh YOLO phải xử lý thành công (0.0 - 1.0)
+      - YOLO_SUCCESS_THRESHOLD=0.7
+
+    networks:
+      - crack_net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+
+networks:
+  crack_net:
+    external: true
+    name: crack_api_crack_net

@@ -1,0 +1,288 @@
+[
+  {
+    "class_name": "nut",
+    "defect_code": "RD-CRK-001",
+    "defect_name": "Vết nứt mặt đường",
+    "model_type": "road",
+    "tcvn_codes": [
+      "TCVN 8863:2011",
+      "22 TCN 211-06"
+    ],
+    "severity_criteria": {
+      "low": "Vết nứt đơn lẻ, bề rộng w < 3mm, chiều dài ngắn, chưa bong bật.",
+      "medium": "Vết nứt nứt dọc/ngang rõ rệt, bề rộng w từ 3mm - 6mm, có mép nứt nứt nhẹ.",
+      "high": "Vết nứt rộng w > 6mm, xuất hiện nhiều vết nứt song song hoặc có bong bật nhẹ.",
+      "critical": "Vết nứt sạt lở mép, đe dọa lún nứt kết cấu áo đường."
+    },
+    "recommended_actions": {
+      "low": "Theo dõi định kỳ, trám khe nứt bằng nhựa lỏng nếu w > 2mm.",
+      "medium": "Rót nhựa bitum nóng chèn khe nứt để ngừa nước thấm.",
+      "high": "Cào bóc cục bộ và trám vá bằng bê tông nhựa hạt mịn.",
+      "critical": "Sửa chữa gia cố kết cấu móng và thay lớp áo đường."
+    }
+  },
+  {
+    "class_name": "nut_ca_sau",
+    "defect_code": "RD-CRK-002",
+    "defect_name": "Vết nứt rạn rùa / cá sấu",
+    "model_type": "road",
+    "tcvn_codes": [
+      "TCVN 8863:2011",
+      "22 TCN 211-06"
+    ],
+    "severity_criteria": {
+      "low": "Mạng lưới nứt rạn nhỏ bọc kín các ô bê tông nhựa, đường nứt nhỏ w < 2mm.",
+      "medium": "Nứt rạn nứt kết nối thành hình vảy cá sấu rõ rệt, w từ 2mm - 5mm.",
+      "high": "Các ô nứt cá sấu bắt đầu vỡ vụn và bong bật mảng bê tông nhựa.",
+      "critical": "Bong bật nát mặt đường diện rộng, sụt lún kết cấu nền móng."
+    },
+    "recommended_actions": {
+      "low": "Phun láng nhựa mặt bề mặt (seal coat).",
+      "medium": "Cào bóc lớp bê tông nhựa hư hỏng, rải thảm lại.",
+      "high": "Đào thay lớp móng và thảm lại bê tông nhựa mới.",
+      "critical": "Cải tạo khôi phục toàn bộ gia cường móng và áo đường."
+    }
+  },
+  {
+    "class_name": "o_ga/bong_bat",
+    "defect_code": "RD-PTH-001",
+    "defect_name": "Ổ gà / Bong bật mặt đường",
+    "model_type": "road",
+    "tcvn_codes": [
+      "TCVN 8863:2011",
+      "22 TCN 211-06"
+    ],
+    "severity_criteria": {
+      "low": "Vết bong bật nông, đường kính d < 15cm, chiều sâu h < 2.5cm.",
+      "medium": "Ổ gà rõ rệt, đường kính 15cm - 30cm, chiều sâu 2.5cm - 5cm.",
+      "high": "Ổ gà sâu > 5cm, đường kính > 30cm, sắc cạnh.",
+      "critical": "Hố sâu nguy hiểm diện rộng, đe dọa an toàn giao thông."
+    },
+    "recommended_actions": {
+      "low": "Trám vá tạm thời bằng bê tông nhựa nguội hoặc nhựa nóng.",
+      "medium": "Cắt vuông thành vách, đầm nén vá bê tông nhựa nóng.",
+      "high": "Đào sâu xử lý lại lớp móng dưới ổ gà, đầm vá nhựa nóng.",
+      "critical": "Cảnh báo nguy hiểm khẩn cấp và sửa chữa tái thiết diện rộng."
+    }
+  },
+  {
+    "class_name": "Crack",
+    "defect_code": "BR-CRK-001",
+    "defect_name": "Vết nứt kết cấu cầu",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "TCVN 9343:2012"
+    ],
+    "severity_criteria": {
+      "low": "Vết nứt nhỏ bề mặt bê tông, bề rộng w < 0.2mm.",
+      "medium": "Vết nứt phát triển rõ rệt, bề rộng w từ 0.2mm - 0.3mm.",
+      "high": "Vết nứt rộng w > 0.3mm hoặc nứt xuyên thấu bê tông.",
+      "critical": "Vết nứt nứt nguy hiểm đe dọa khả năng chịu lực của dầm/mố trụ."
+    },
+    "recommended_actions": {
+      "low": "Theo dõi và trám trét bề mặt bằng vữa thấm.",
+      "medium": "Bơm keo Epoxy áp lực thấp chèn kín vết nứt.",
+      "high": "Bơm Epoxy áp lực cao và gia cường dầm cầu bằng sợi carbon (FRP).",
+      "critical": "Gia cường khẩn cấp kết cấu dầm/mố cầu."
+    }
+  },
+  {
+    "class_name": "Efflorescence_Leaching",
+    "defect_code": "BR-EFF-001",
+    "defect_name": "Vôi hóa / Rò rỉ chất kết dính",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "TCVN 9343:2012"
+    ],
+    "severity_criteria": {
+      "low": "Vết vệt trắng vôi hóa nhẹ quanh khe nứt.",
+      "medium": "Vôi hóa kết tủa dày đọng vệt rõ trên bề mặt bê tông cầu.",
+      "high": "Vôi hóa kéo theo rò rỉ nước liên tục đe dọa cốt thép.",
+      "critical": "Mất liên kết chất kết dính bê tông nghiêm trọng."
+    },
+    "recommended_actions": {
+      "low": "Vệ sinh lau sạch vệt vôi hóa.",
+      "medium": "Xử lý chống thấm nước từ mặt trên bản mặt cầu.",
+      "high": "Đục tẩy vùng bê tông vôi hóa nặng, trám vữa sửa chữa.",
+      "critical": "Thay thế lớp chống thấm và phục hồi kết cấu bê tông."
+    }
+  },
+  {
+    "class_name": "Exposed Rebar",
+    "defect_code": "BR-RBR-001",
+    "defect_name": "Lộ cốt thép",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "TCVN 9343:2012"
+    ],
+    "severity_criteria": {
+      "low": "Lớp bảo vệ bê tông bong cục bộ, cốt thép mới lộ và chưa ăn mòn đáng kể.",
+      "medium": "Cốt thép lộ rõ, xuất hiện gỉ bề mặt nhưng chưa suy giảm tiết diện.",
+      "high": "Cốt thép lộ trên diện rộng, gỉ vảy và bắt đầu suy giảm tiết diện.",
+      "critical": "Cốt thép đứt, biến dạng hoặc suy giảm tiết diện nghiêm trọng."
+    },
+    "recommended_actions": {
+      "low": "Làm sạch và trám phục hồi lớp bê tông bảo vệ.",
+      "medium": "Tẩy gỉ, phủ chất bảo vệ cốt thép và vá vữa sửa chữa không co ngót.",
+      "high": "Bổ sung hoặc thay cốt thép, sau đó phục hồi bê tông bằng vật liệu chuyên dụng.",
+      "critical": "Chống đỡ, hạn chế khai thác và gia cường khẩn cấp theo thiết kế."
+    }
+  },
+  {
+    "class_name": "Spalling",
+    "defect_code": "BR-SPL-001",
+    "defect_name": "Bong tróc / Vỡ ốp bê tông",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "TCVN 9343:2012"
+    ],
+    "severity_criteria": {
+      "low": "Mảng bong vỡ mỏng bề mặt, diện tích < 0.05m2.",
+      "medium": "Vỡ bê tông lộ lớp bảo vệ cốt thép, diện tích 0.05m2 - 0.2m2.",
+      "high": "Vỡ mảng bê tông lộ rõ thanh thép bên trong.",
+      "critical": "Vỡ mảng lớn bê tông chịu lực, đe dọa kết cấu."
+    },
+    "recommended_actions": {
+      "low": "Trám vá bề mặt bằng vữa polyme.",
+      "medium": "Đục bỏ phần yếu, sơn lót bảo vệ và trám vữa PCC.",
+      "high": "Xử lý làm sạch gỉ thép, trát bù vữa cường độ cao.",
+      "critical": "Gia cường lại đoạn bê tông bị sạt vỡ."
+    }
+  },
+  {
+    "class_name": "Staining_Infiltration",
+    "defect_code": "BR-STN-001",
+    "defect_name": "Ố màu / Thấm nước bề mặt",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "TCVN 9343:2012"
+    ],
+    "severity_criteria": {
+      "low": "Vệt ẩm màu nhẹ trên dầm/mố.",
+      "medium": "Vệt ố màu loang rộng có giọt nước đọng.",
+      "high": "Thấm đọng nước kéo dài làm rò rỉ rỉ sét.",
+      "critical": "Thấm ngập đe dọa các khe và gối cầu."
+    },
+    "recommended_actions": {
+      "low": "Theo dõi trong mùa mưa.",
+      "medium": "Sửa chữa thoát nước và phun keo kỵ nước.",
+      "high": "Sửa lớp chống thấm bản mặt cầu.",
+      "critical": "Cải tạo hệ thống thoát nước và chống thấm toàn bộ."
+    }
+  },
+  {
+    "class_name": "Corrosion",
+    "defect_code": "BR-CRS-001",
+    "defect_name": "Rỉ sét cốt thép / dầm thép",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "TCVN 9343:2012"
+    ],
+    "severity_criteria": {
+      "low": "Vệt rỉ đỏ nhẹ bám trên bề mặt.",
+      "medium": "Cốt thép rỉ bong tróc vảy kim loại nhẹ.",
+      "high": "Gỉ sét làm suy giảm tiết diện thanh thép.",
+      "critical": "Thép bị ăn mòn đứt đạn / suy giảm lực nặng."
+    },
+    "recommended_actions": {
+      "low": "Đánh bóng gỉ nhẹ, sơn bảo vệ.",
+      "medium": "Tẩy gỉ hóa học, sơn phủ Epoxy chống ăn mòn.",
+      "high": "Hàn bổ sung thanh thép gia cường và bọc bê tông bảo vệ.",
+      "critical": "Thay thế phần dầm/kết cấu thép ăn mòn nặng."
+    }
+  },
+  {
+    "class_name": "Biological_Growth",
+    "defect_code": "BR-BIO-001",
+    "defect_name": "Rêu mốc / Sinh trưởng sinh học",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "TCVN 9343:2012"
+    ],
+    "severity_criteria": {
+      "low": "Rêu hoặc mốc mỏng, phạm vi nhỏ và chưa giữ ẩm kéo dài.",
+      "medium": "Mảng sinh trưởng rõ, bề mặt thường xuyên ẩm và đổi màu.",
+      "high": "Rêu mốc dày trên diện rộng, che khuất bề mặt và thúc đẩy suy thoái vật liệu.",
+      "critical": "Sinh trưởng sinh học đi kèm thấm nước kéo dài hoặc phá hủy bề mặt nghiêm trọng."
+    },
+    "recommended_actions": {
+      "low": "Vệ sinh cơ học và theo dõi nguồn ẩm.",
+      "medium": "Làm sạch bằng biện pháp phù hợp và xử lý thoát nước cục bộ.",
+      "high": "Vệ sinh chuyên sâu, diệt tác nhân sinh học và sửa hệ thống chống thấm.",
+      "critical": "Xử lý triệt để nguồn nước và phục hồi phần vật liệu đã suy thoái."
+    }
+  },
+  {
+    "class_name": "Pothole Asphalt",
+    "defect_code": "BR-PTH-001",
+    "defect_name": "Ổ gà lớp phủ nhựa trên cầu",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "TCVN 8863:2011"
+    ],
+    "severity_criteria": {
+      "low": "Bong bật nông trên lớp phủ nhựa, kích thước nhỏ.",
+      "medium": "Ổ gà rõ, ảnh hưởng độ êm thuận nhưng chưa lộ bản mặt cầu.",
+      "high": "Ổ gà sâu hoặc diện rộng, có nguy cơ nước thấm xuống bản mặt cầu.",
+      "critical": "Hư hỏng lớp phủ nghiêm trọng, lộ kết cấu hoặc gây mất an toàn giao thông."
+    },
+    "recommended_actions": {
+      "low": "Vá kín cục bộ bằng vật liệu tương thích.",
+      "medium": "Cắt sửa mép và vá bê tông nhựa nóng đúng quy trình.",
+      "high": "Cào bóc khu vực hư hỏng, sửa chống thấm và hoàn trả lớp phủ.",
+      "critical": "Tổ chức cảnh báo, hạn chế khai thác và sửa chữa khẩn cấp."
+    }
+  },
+  {
+    "class_name": "Expansion Joint",
+    "defect_code": "BR-EXJ-001",
+    "defect_name": "Hư hỏng khe co giãn",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "22 TCN 272-05"
+    ],
+    "severity_criteria": {
+      "low": "Rác bẩn kẹt nhẹ trong khe co giãn.",
+      "medium": "Đệm cao su bị rách hoặc nẹp khe bị cong vênh nhẹ.",
+      "high": "Khe co giãn đứt gãy, gây xóc nặng khi xe qua.",
+      "critical": "Kẹt cứng hoặc bong bật hoàn toàn khe co giãn."
+    },
+    "recommended_actions": {
+      "low": "Vệ sinh hút rác khe co giãn.",
+      "medium": "Thay tấm đệm cao su hoặc siết lại bulong.",
+      "high": "Sửa chữa thay thế nẹp và khe co giãn mới.",
+      "critical": "Thay thế khẩn cấp khe co giãn mới."
+    }
+  },
+  {
+    "class_name": "Guardrail Damaged",
+    "defect_code": "BR-GRD-001",
+    "defect_name": "Hư hỏng lan can / rào chắn",
+    "model_type": "bridge",
+    "tcvn_codes": [
+      "TCVN 12885:2020",
+      "22 TCN 272-05"
+    ],
+    "severity_criteria": {
+      "low": "Bề mặt lan can bị va trầy xước sơn nhẹ.",
+      "medium": "Lan can bị biến dạng móp méo nhẹ.",
+      "high": "Lan can gãy đứt hoặc nứt trụ bê tông chân lan can.",
+      "critical": "Lan can sạt đổ mất tác dụng bảo vệ an toàn."
+    },
+    "recommended_actions": {
+      "low": "Sơn lại bảo vệ lan can.",
+      "medium": "Nắn chỉnh đòn đệm nẹp lan can.",
+      "high": "Thay thế đoạn lan can hỏng và trám chân trụ.",
+      "critical": "Lắp mới đoạn lan can khẩn cấp."
+    }
+  }
+]

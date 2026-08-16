@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "models": {
+    "bridge": {
+      "enabled": true,
+      "status": "approved",
+      "model_sha256": "F5CE1C15285894E13042CD8C4BD7EF2E0C714F5FF95028414DDCE8949289FEA6",
+      "raw_names": {
+        "0": "Crack",
+        "1": "Efflorescence_Leaching",
+        "2": "Exposed Rebar",
+        "3": "Spalling",
+        "4": "Staining_Infiltration",
+        "5": "Corrosion",
+        "6": "Biological_Growth",
+        "7": "Pothole Asphalt",
+        "8": "Expansion Joint",
+        "9": "Guardrail Damaged",
+        "10": "Control Point"
+      },
+      "class_permutation_map": {
+        "0": {
+          "canonical_id": 6,
+          "canonical_name": "Biological_Growth"
+        },
+        "1": {
+          "canonical_id": 10,
+          "canonical_name": "Control Point"
+        },
+        "2": {
+          "canonical_id": 5,
+          "canonical_name": "Corrosion"
+        },
+        "3": {
+          "canonical_id": 0,
+          "canonical_name": "Crack"
+        },
+        "4": {
+          "canonical_id": 1,
+          "canonical_name": "Efflorescence_Leaching"
+        },
+        "5": {
+          "canonical_id": 8,
+          "canonical_name": "Expansion Joint"
+        },
+        "6": {
+          "canonical_id": 2,
+          "canonical_name": "Exposed Rebar"
+        },
+        "7": {
+          "canonical_id": 9,
+          "canonical_name": "Guardrail Damaged"
+        },
+        "8": {
+          "canonical_id": 7,
+          "canonical_name": "Pothole Asphalt"
+        },
+        "9": {
+          "canonical_id": 3,
+          "canonical_name": "Spalling"
+        },
+        "10": {
+          "canonical_id": 4,
+          "canonical_name": "Staining_Infiltration"
+        }
+      },
+      "audit_notes": "Approved from the original Roboflow v1 data.yaml class order supplied by the project owner; visually cross-checked for raw IDs 3, 6, and 9."
+    }
+  }
+}

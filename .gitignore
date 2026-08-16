@@ -1,0 +1,110 @@
+# ==========================================
+# Crack Detection & Digital Twin Platform
+# Global Git Ignore Rules
+# ==========================================
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.cert
+*.pfx
+
+# Large Binary Files & AI Model Weights
+*.pt
+*.pth
+*.engine
+*.onnx
+*.weights
+*.bin
+*.h5
+*.tflite
+*.safetensors
+weights/
+**/weights/
+models/
+**/models/*.pt
+**/models/*.engine
+**/models/*.onnx
+
+# Datasets & Large Media Files
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+Dataset_ALL/
+**/Dataset_ALL*/
+**/Dataset_Sliced*/
+**/dacl10k*/
+sources/
+**/sources/
+uploads/
+**/uploads/
+temp/
+**/temp/
+temp_uploads/
+**/temp_uploads/
+mongo_data/
+**/mongo_data/
+
+# Python & AI Cache
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+wandb/
+**/wandb/
+runs/
+**/runs/
+
+# Node.js & Next.js Build Output
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+**/out/
+.vercel
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Log Files & Executables
+*.log
+*.err
+*.exe
+tunnel.log

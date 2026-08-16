@@ -1,0 +1,15 @@
+# BoT-SORT Drone SOTA Tracker Configuration
+# Optimized for UAV Inspection (Drone Camera Egocentric Motion Compensation)
+
+tracker_type: botsort
+track_high_thresh: 0.35      # High confidence threshold for initializing tracks
+track_low_thresh: 0.10       # Low confidence threshold for recovering micro-cracks
+new_track_thresh: 0.40       # Confirmation threshold for new tracks
+track_buffer: 60             # Maintain track history for 60 frames (2 seconds at 30 FPS)
+match_thresh: 0.8            # Spatial IoU matching threshold
+
+# Global Motion Compensation (GMC) for Drone Egocentric Motion
+gmc_method: sparseOptFlow    # Sparse Optical Flow (ORB/KLT) background motion estimation
+proximity_thresh: 0.5
+appearance_thresh: 0.25
+with_reid: False             # Disabled ReID overhead to maximize GPU FPS for SAHI

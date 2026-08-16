@@ -1,0 +1,32 @@
+services:
+  postgres_db:
+    image: postgres:15-alpine
+    container_name: chatbot_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: chatbot_data
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  middleware_api:
+    build: .
+    container_name: ragflow_middleware_api
+    restart: always
+    depends_on:
+      - postgres_db
+    ports:
+      - "8088:8000" # Mở port cho Frontend gọi API và tránh xung đột với Crack API
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env
+    environment:
+      - DB_DSN=host=postgres_db dbname=chatbot_data user=admin password=secretpassword
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+
+volumes:
+  pg_data:

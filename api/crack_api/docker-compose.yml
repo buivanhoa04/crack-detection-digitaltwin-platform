@@ -1,0 +1,99 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: crack_api_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
+    networks:
+      - crack_net
+    restart: always
+
+  ai-service:
+    build: .
+    image: crack_api_ai_local:latest
+    container_name: crack_api_ai
+    ports:
+      - "8000:8000"
+    environment:
+      # Kết nối nội bộ Docker giữa AI và MongoDB
+      - MONGO_DETAILS=mongodb://mongodb:27017/
+      - REDIS_URL=redis://redis:6379/0
+      - HF_ENDPOINT=https://hf-mirror.com
+      - PYTHONPATH=/app
+
+      - API_TOKEN=secure_token_CrackAPI_12345678@@ # Thay đổi token tùy ý tại đây
+      - ALLOWED_IPS=""  # Thêm IP của Server BE vào đây
+
+      # ====== CHATBOT MIDDLEWARE (RAGFlow) ======
+      - CHATBOT_ENABLED=false
+      - CHATBOT_MIDDLEWARE_URL=http://host.docker.internal:8088
+      - CHATBOT_API_TOKEN=secure_token_RAGFlow_12345678@@
+
+
+    volumes:
+      - ./sources:/data/file/sources
+      - ./weights:/app/weights
+    networks:
+      - crack_net
+    depends_on:
+      - mongodb
+      - redis
+    shm_size: '4gb'
+    # Cấu hình GPU (NVIDIA Docker). 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    restart: always
+
+  redis:
+    image: redis:alpine
+    container_name: crack_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - crack_net
+    restart: always
+
+  celery-worker:
+    build: .
+    image: crack_api_ai_local:latest
+    container_name: crack_celery_worker
+    command: celery -A celery_tasks worker --loglevel=info
+    environment:
+      - MONGO_DETAILS=mongodb://mongodb:27017/
+      - REDIS_URL=redis://redis:6379/0
+      - HF_ENDPOINT=https://hf-mirror.com
+      - PYTHONPATH=/app
+      - API_TOKEN=secure_token_CrackAPI_12345678@@
+    volumes:
+      - ./sources:/data/file/sources
+      - ./weights:/app/weights
+    networks:
+      - crack_net
+    depends_on:
+      - mongodb
+      - redis
+    shm_size: '4gb'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    restart: always
+
+
+networks:
+  crack_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
