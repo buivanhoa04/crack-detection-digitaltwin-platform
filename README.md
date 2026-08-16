@@ -29,7 +29,27 @@ Hệ thống **AI Drone Giám Định & Digital Twin 3D** là giải pháp công
 
 ---
 
-## 🏗️ 2. KIẾN TRÚC HỆ THỐNG TOÀN DIỆN
+## 📸 2. GIAO DIỆN HỆ THỐNG THỰC TẾ (SYSTEM SHOWCASE)
+
+<div align="center">
+
+### 🖥️ Không Gian Phân Tích & Điều Phối Tác Vụ AI
+*Giao diện tải tệp tin ảnh/video đơn hoặc theo đợt (>500 ảnh), chọn mô hình (Đường bộ / Cầu), giám sát tiến trình và xem kết quả tức thời.*
+<br/>
+<img src="docs/images/ai_workspace.png" alt="Không Gian Phân Tích AI" width="95%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+
+<br/><br/>
+
+### 🌐 Trình Xem Bản Sao Số 3D & Danh Mục Khuyết Tật (3D Digital Twin)
+*Tái tạo không gian số 3D kết cấu công trình, gắn thẻ tọa độ khuyết tật trong không gian thực, hiển thị danh mục độ tin cậy và mức độ nghiêm trọng.*
+<br/>
+<img src="docs/images/3d_digital_twin.png" alt="Bản Sao Số 3D Công Trình" width="95%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+
+</div>
+
+---
+
+## 🏗️ 3. KIẾN TRÚC HỆ THỐNG TOÀN DIỆN
 
 ```mermaid
 graph TD
@@ -72,30 +92,30 @@ graph TD
 
 ---
 
-## ⚡ 3. ĐIỂM NHẤN CÔNG NGHỆ & ĐỘT PHÁ KỸ THUẬT
+## ⚡ 4. ĐIỂM NHẤN CÔNG NGHỆ & ĐỘT PHÁ KỸ THUẬT
 
-### 🛣️ 3.1. Nhận diện khuyết tật mặt đường bộ (YOLO + CBAM + OBB)
+### 🛣️ 4.1. Nhận diện khuyết tật mặt đường bộ (YOLO + CBAM + OBB)
 - **Oriented Bounding Box (OBB - Hộp bao có góc xoay)**: Nhận diện chính xác hướng đi của vết nứt xiên, nứt lưới (*Alligator Crack*), ổ gà (*Pothole*), khe lún và vết nứt dọc/ngang mà không bị dư thừa diện tích nền như hộp bao thẳng truyền thống.
 - **Cơ chế chú ý CBAM (Convolutional Block Attention Module)**: Tập trung nhận diện các vân nứt mờ nhạt ngay cả trong điều kiện mặt đường bị bóng cây, loang lổ ẩm ướt hoặc ánh sáng gắt.
 
-### 🌉 3.2. Phân đoạn đa khuyết tật kết cấu cầu (DACL10k + SAHI)
+### 🌉 4.2. Phân đoạn đa khuyết tật kết cấu cầu (DACL10k + SAHI)
 - Phân loại và phân đoạn chính xác hơn 7 nhóm khuyết tật cầu bê tông: *Vết nứt kết cấu, Vôi hóa / rò rỉ chất kết dính, Lộ cốt thép, Bong tróc bê tông, Rỉ sét ăn mòn, Ẩm ướt thấm nước*.
 - **SAHI (Slicing Aided Hyper Inference)**: Tự động chia nhỏ ảnh 4K/8K thành các ô tile 640x640 có độ gối chồng (*overlap*), sau đó hợp nhất qua thuật toán NMM (*Non-Maximum Merging*), đảm bảo không bỏ sót bất kỳ vết nứt siêu nhỏ nào.
 
-### 🎯 3.3. Theo dõi hành trình & Khử trùng lặp (BoT-SORT + GMC)
+### 🎯 4.3. Theo dõi hành trình & Khử trùng lặp (BoT-SORT + GMC)
 - Sử dụng thuật toán theo dõi **BoT-SORT** kết hợp bù trừ chuyển động camera drone **GMC (Global Motion Compensation)** để duy trì ID duy nhất cho từng khuyết tật trên suốt hành trình bay.
 - **Khử trùng lặp đa khung hình**: Tránh tính toán trùng lặp diện tích và số lượng hư hỏng khi drone bay qua lại.
 
-### ⚡ 3.4. Tăng tốc suy luận GPU (NVIDIA TensorRT)
+### ⚡ 4.4. Tăng tốc suy luận GPU (NVIDIA TensorRT)
 - Chuyển đổi và tối ưu mô hình sang định dạng **TensorRT Engine (FP16 / INT8)**, đạt tốc độ xử lý dưới **30 mili-giây / khung hình**, đáp ứng hoàn hảo yêu cầu truyền hình ảnh trực tiếp.
 
-### 🌐 3.5. Bản sao số 3D Digital Twin tương tác
+### 🌐 4.5. Bản sao số 3D Digital Twin tương tác
 - Tích hợp **COLMAP & Meshroom** xây dựng mô hình kết cấu 3D dạng textured mesh (`.obj`, `.gltf`).
 - Người dùng có thể xoay 360°, phóng to từng góc khuất của dầm cầu, đo đạc trực tiếp chiều dài/diện tích vết nứt và xem vết nứt trên mô hình 3D thực.
 
 ---
 
-## 💻 4. DANH MỤC CÔNG NGHỆ SỬ DỤNG (TECH STACK)
+## 💻 5. DANH MỤC CÔNG NGHỆ SỬ DỤNG (TECH STACK)
 
 | Khối Chức Năng | Công Nghệ & Thư Viện Chính |
 | :--- | :--- |
@@ -109,7 +129,7 @@ graph TD
 
 ---
 
-## 📁 5. CẤU TRÚC THƯ MỤC DỰ ÁN (MONOREPO)
+## 📁 6. CẤU TRÚC THƯ MỤC DỰ ÁN (MONOREPO)
 
 ```
 crack-digitaltwin-platform/
@@ -134,6 +154,7 @@ crack-digitaltwin-platform/
 │   ├── backend/                    # FastAPI Master Backend (Quản lý đợt khảo sát, thẩm định, phân quyền)
 │   └── nginx/                      # Cấu hình máy chủ điều hướng Nginx
 │
+├── docs/images/                    # Ảnh chụp giao diện thực tế của hệ thống
 ├── docker-compose.yml              # File điều phối toàn bộ hệ thống bằng Docker Compose
 ├── .env.example                    # Mẫu cấu hình biến môi trường an toàn
 └── .gitignore                      # Quy tắc loại trừ tệp tin rác và bảo mật
@@ -141,7 +162,7 @@ crack-digitaltwin-platform/
 
 ---
 
-## 🚀 6. HƯỚNG DẪN CÀI ĐẶT & CHẠY HỆ THỐNG
+## 🚀 7. HƯỚNG DẪN CÀI ĐẶT & CHẠY HỆ THỐNG
 
 ### 1. Tải Mã Nguồn Về Máy
 ```bash
@@ -170,7 +191,7 @@ docker compose up -d --build
 
 ---
 
-## 👨‍💻 7. THÔNG TIN TÁC GIẢ & LIÊN HỆ
+## 👨‍💻 8. THÔNG TIN TÁC GIẢ & LIÊN HỆ
 - **Kỹ sư phát triển**: **Bùi Văn Hòa** ([@buivanhoa04](https://github.com/buivanhoa04))
 - **Email liên hệ**: `buivanhoa04@gmail.com`
 - **Lĩnh vực chuyên môn**: Kỹ sư Thị giác Máy tính (Computer Vision) • Chuyên gia AI & Digital Twin Hạ tầng Giao thông
