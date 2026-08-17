@@ -55,6 +55,10 @@ temp_uploads/
 **/temp_uploads/
 mongo_data/
 **/mongo_data/
+pipelines/
+**/pipelines/
+convert/
+**/convert/
 
 # Python & AI Cache
 __pycache__/

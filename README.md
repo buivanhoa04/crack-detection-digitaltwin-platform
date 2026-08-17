@@ -141,9 +141,7 @@ crack-digitaltwin-platform/
 │   │   ├── main.py                 # REST API FastAPI lắng nghe yêu cầu giám định
 │   │   └── Dockerfile              # Cấu hình container Docker AI chuyên dụng GPU
 │   ├── meshroom_3d/                # Dịch vụ tái tạo mô hình 3D (Meshroom / COLMAP)
-│   ├── chatbot_middleware/         # Middleware kết nối Chatbot tư vấn tiêu chuẩn TCVN
-│   ├── pipelines/                  # Pipeline huấn luyện mô hình (Cầu DACL10k & Đường OBB)
-│   └── convert/                    # Tiện ích chuyển đổi dữ liệu và nhãn dán
+│   └── chatbot_middleware/         # Middleware kết nối Chatbot tư vấn tiêu chuẩn TCVN
 │
 ├── web/                            # Khối Giao Diện & Điều Hành Web
 │   ├── frontend/                   # Ứng dụng Next.js 14
